@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const authRouter = require('./routes/auth.routes');
 
 dotenv.config();
 const app = express();
@@ -20,5 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
     res.send("API is running ✅");
 });
+
+//auth routes
+app.use('/api/auth',authRouter);
 
 module.exports = app;

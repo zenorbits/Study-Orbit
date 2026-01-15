@@ -91,7 +91,7 @@ const RegisterPage = () => {
               name="specialKey"
               value={formData.specialKey}
               onChange={handleChange}
-              placeholder="Enter special key (if any)"
+              placeholder="Enter special key "
               autoComplete="off"
               className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-white/30 rounded-lg bg-white dark:bg-white/10 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400"
             />
