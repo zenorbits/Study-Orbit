@@ -5,11 +5,6 @@ import ParentAuthPage from './AuthPages/PArentAuthPage'
 
 
 const App = () => {
-
-
-
-
-
   return (
 
     <div className="min-h-screen font-mono items-center justify-center bg-[#111] text-white relative">

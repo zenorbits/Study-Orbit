@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import RegisterPage from './RegisterPage'
 import LoginPage from './LoginPage'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleMode } from '../redux/features/darkModeSlice'
+import { toggleMode } from '../redux/features/toggleThemeSlice'
 
 
 const ParentAuthPage = () => {
