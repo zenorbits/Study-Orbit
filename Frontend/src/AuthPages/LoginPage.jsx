@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
-  const selector = useSelector((state) => state.toggleTheme.value); // ✅ fixed
+  const selector = useSelector((state) => state.toggleTheme.value);
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -34,8 +34,12 @@ const LoginPage = () => {
   }, [selector]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen w-full px-4 bg-white dark:bg-[#111]">
-      <div className="backdrop-blur-lg bg-white/70 dark:bg-white/10 shadow-2xl rounded-xl p-6 sm:p-8 md:p-10 w-full max-w-sm sm:max-w-md lg:max-w-lg border border-gray-200 dark:border-white/20">
+    <div
+      className="flex items-center justify-center min-h-screen w-full px-4 
+      bg-gradient-to-br from-white via-blue-100 to-blue-500 
+      dark:bg-gradient-to-br dark:from-gray-900 dark:via-black dark:to-emerald-900"
+    >
+      <div className="backdrop-blur-lg bg-white/70 dark:bg-gradient-to-br from-gray-900 via-black to-emerald-900 shadow-2xl rounded-xl p-6 sm:p-8 md:p-10 w-full max-w-sm sm:max-w-md lg:max-w-lg border border-gray-200 dark:border-white/20">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-sky-500 dark:text-emerald-400 mb-6">
           Login
         </h2>
@@ -70,17 +74,21 @@ const LoginPage = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full dark:bg-emerald-500 bg-sky-500 text-white font-semibold py-2 sm:py-3 rounded-lg hover:bg-sky-600 dark:hover:bg-emerald-600 transition duration-200 active:scale-95"
+            className="w-full bg-sky-500 dark:bg-emerald-500 dark:text-black text-white font-semibold py-2 sm:py-3 rounded-lg hover:bg-sky-600 dark:hover:bg-emerald-600 transition duration-200 active:scale-95"
           >
             Login
           </button>
         </form>
 
-
         <div className="text flex justify-center pt-5 space-x-2">
-          <span className='dark:text-white text-black'>Don't have a account?</span>  <Link to='/register' className='dark:text-emerald-400 dark:hover:text-emerald-500 text-sky-500 hover:text-sky-800 cursor-pointer '>Create One</Link>
+          <span className="text-black dark:text-white">Don't have an account?</span>
+          <Link
+            to="/register"
+            className="text-sky-500 hover:text-sky-800 dark:text-emerald-400 dark:hover:text-emerald-500 cursor-pointer"
+          >
+            Create One
+          </Link>
         </div>
-
       </div>
     </div>
   );
