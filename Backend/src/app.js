@@ -8,9 +8,11 @@ dotenv.config();
 const app = express();
 
 // Middleware
+const allowedOrigins = [process.env.CLIENT_URL, "https://your-production-domain.com"];
+
 app.use(cors({
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST"],
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
 app.use(express.json());
@@ -23,6 +25,6 @@ app.get("/", (req, res) => {
 });
 
 //auth routes
-app.use('/api/auth',authRouter);
+app.use('/api/auth', authRouter);
 
 module.exports = app;

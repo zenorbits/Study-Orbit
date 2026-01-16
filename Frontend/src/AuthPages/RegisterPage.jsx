@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUserRegisterMutation } from '../redux/api/authApi';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { setCredentials } from '../redux/features/authApiSlice';
 
 const RegisterPage = () => {
   const selector = useSelector((state) => state.toggleTheme.value);
+  const [registerMutation, { isLoading }] = useUserRegisterMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (selector === 'Dark') {
@@ -14,7 +21,7 @@ const RegisterPage = () => {
   }, [selector]);
 
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
     specialKey: ''
@@ -28,9 +35,46 @@ const RegisterPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+
+    const { username, email, password, specialKey } = formData;
+
+    // ✅ Validation check
+    if (!username || !email || !password) {
+      toast.error('Please fill in all required credentials ❌');
+      return;
+    }
+
+    try {
+      const response = await registerMutation({
+        username,
+        email,
+        password,
+        secretKey: specialKey
+      });
+
+      console.log(response);
+
+      if (response?.data) {
+        const { user, token } = response.data;
+
+        dispatch(setCredentials({
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          token
+        }));
+
+        toast.success('Registration successful 🎉');
+        setFormData({ username: '', email: '', password: '', specialKey: '' });
+        navigate('/login'); // redirect after success
+      } else if (response?.error) {
+        toast.error(response.error.data?.message || 'Registration failed ❌');
+      }
+    } catch (err) {
+      toast.error('Something went wrong ❌');
+    }
   };
 
   return (
@@ -49,8 +93,8 @@ const RegisterPage = () => {
             <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Name</label>
             <input
               type="text"
-              name="name"
-              value={formData.name}
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               placeholder="Enter your name"
               className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-white/30 rounded-lg bg-white dark:bg-white/10 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400"
@@ -87,7 +131,7 @@ const RegisterPage = () => {
           {/* Special Optional Key */}
           <div>
             <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
-              Special Key <span className="text-gray-500 dark:text-gray-400">(optional)</span>
+              Special Key
             </label>
             <input
               type="text"
@@ -103,9 +147,10 @@ const RegisterPage = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-sky-500 dark:bg-emerald-500 dark:text-black text-white font-semibold py-2 sm:py-3 rounded-lg hover:bg-sky-600 dark:hover:bg-emerald-600 transition duration-200 active:scale-95"
+            disabled={isLoading}
+            className="w-full bg-sky-500 dark:bg-emerald-500 text-white font-semibold py-2 sm:py-3 rounded-lg hover:bg-sky-600 dark:hover:bg-emerald-600 transition duration-200 active:scale-95 disabled:opacity-50"
           >
-            Register
+            {isLoading ? 'Registering...' : 'Register'}
           </button>
         </form>
 
