@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUserLoginMutation } from '../redux/api/authApi';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { setCredentials } from '../redux/features/authApiSlice';
 
 const LoginPage = () => {
   const selector = useSelector((state) => state.toggleTheme.value);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [loginMutation, { isLoading }] = useUserLoginMutation();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -19,9 +25,40 @@ const LoginPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login submitted:', formData);
+
+    const { email, password } = formData;
+
+    if (!email || !password) {
+      toast.error('Please fill in all required credentials ❌');
+      return;
+    }
+
+    try {
+      const response = await loginMutation({ email, password });
+      console.log(response);
+
+      if (response?.data) {
+        const { user, token } = response.data;
+
+        // ✅ Save credentials in Redux + localStorage
+        dispatch(setCredentials({
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          token
+        }));
+
+        toast.success('Login successful 🎉');
+        setFormData({ email: '', password: '' });
+        navigate('/dashboard'); // redirect to dashboard/home
+      } else if (response?.error) {
+        toast.error(response.error.data?.message || 'Login failed ❌');
+      }
+    } catch (err) {
+      toast.error('Something went wrong ❌');
+    }
   };
 
   // ✅ Sync Redux state with Tailwind's dark mode
@@ -74,9 +111,10 @@ const LoginPage = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-sky-500 dark:bg-emerald-500 dark:text-black text-white font-semibold py-2 sm:py-3 rounded-lg hover:bg-sky-600 dark:hover:bg-emerald-600 transition duration-200 active:scale-95"
+            disabled={isLoading}
+            className="w-full bg-sky-500 dark:bg-emerald-500 text-white font-semibold py-2 sm:py-3 rounded-lg hover:bg-sky-600 dark:hover:bg-emerald-600 transition duration-200 active:scale-95 disabled:opacity-50"
           >
-            Login
+            {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
