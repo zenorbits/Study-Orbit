@@ -9,7 +9,7 @@ const LandingPage = () => {
                 {/* Title Section */}
                 <div className="space-y-4">
                     <h1 className="text-6xl md:text-7xl font-extrabold text-emerald-400 drop-shadow-lg">
-                        Zenorbits
+                        StudyOrbit
                     </h1>
                     <p className="text-xl md:text-2xl text-gray-300 italic">
                         Enlightening way to success...

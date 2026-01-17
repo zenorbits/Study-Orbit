@@ -5,6 +5,8 @@ import LoginPage from './AuthPages/LoginPage';
 import ParentAuthPage from './AuthPages/ParentAuthPage';
 import LandingPage from './components/LandingPage';
 import { ToastContainer } from 'react-toastify';
+import AdminPage from './Admin/AdminPage';
+import TeacherPage from './teacher/TeacherPage';
 
 const App = () => {
   return (
@@ -17,6 +19,8 @@ const App = () => {
         {/* ✅ Only render ParentAuthPage for auth routes */}
         <Route path="/register" element={<ParentAuthPage><RegisterPage /></ParentAuthPage>} />
         <Route path="/login" element={<ParentAuthPage><LoginPage /></ParentAuthPage>} />
+        <Route path = '/admin' element={<AdminPage/>} />
+        <Route path = '/teacher' element={<TeacherPage/>} />
       </Routes>
       <ToastContainer position="top-right" autoClose={2500} />
 
