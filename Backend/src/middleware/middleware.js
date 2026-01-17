@@ -12,7 +12,7 @@ const authMiddleware = (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_SECRETKEY);
 
     req.user = decoded; // attach user payload (id, username, email, role, etc.)
     next();

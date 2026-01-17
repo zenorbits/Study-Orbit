@@ -3,6 +3,8 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const authRouter = require('./routes/auth.routes');
+const batchRouter = require('./routes/batch.routes')
+
 
 dotenv.config();
 const app = express();
@@ -19,6 +21,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
+
+
 // Routes
 app.get("/", (req, res) => {
     res.send("API is running ✅");
@@ -26,5 +30,8 @@ app.get("/", (req, res) => {
 
 //auth routes
 app.use('/api/auth', authRouter);
+
+//batch routes
+app.use('/api/batch',batchRouter);
 
 module.exports = app;
