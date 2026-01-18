@@ -6,10 +6,10 @@ const TeacherMainBody = () => {
   const selector = useSelector((state) => state.toggleTheme.value);
 
   const features = [
-    { title: "📚 Batch", description: "View and manage student batches", link: "/batch" },
-    { title: "🛠 Manage Batch", description: "Add, edit, or remove batches", link: "/managebatch" },
-    { title: "📄 Assignments", description: "Create and review assignments", link: "/assignments" },
-    { title: "📢 Announcements", description: "Post important updates for students", link: "/announcements" },
+    { title: "📚 Batch", description: "View and manage student batches", link: "/teacher/batch" },
+    { title: "🛠 Manage Batch", description: "Add, edit, or remove batches", link: "/teacher/managebatch" },
+    { title: "📄 Assignments", description: "Create and review assignments", link: "/teacher/assignments" },
+    { title: "📢 Announcements", description: "Post important updates for students", link: "/teacher/announcements" },
   ];
 
   useEffect(() => {

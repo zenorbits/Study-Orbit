@@ -24,7 +24,8 @@ const App = () => {
 
 
         <Route path='/teacher/*' element={<ProtectedRoutes allowedRoles={['teacher']}><TeacherPage /></ProtectedRoutes>}>
-      
+          <Route path='announcement'/>
+          <Route path='announcement'/>
         </Route>
       </Routes>
       <ToastContainer position="top-right" autoClose={2500} />
