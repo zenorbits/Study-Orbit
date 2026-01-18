@@ -52,7 +52,17 @@ const LoginPage = () => {
 
         toast.success('Login successful 🎉');
         setFormData({ email: '', password: '' });
-        navigate('/dashboard'); // redirect to dashboard/home
+       if(user.role === 'admin' ){
+        navigate('/admin');
+       }else if(user.role === 'teacher'){
+        navigate('/teacher')
+       } else if(user.role === 'parent'){
+        navigate('/parent')
+       }else if(user.role === 'student'){
+        navigate('/student')
+       }else{
+        navigate('/unauthorized')
+       }
       } else if (response?.error) {
         toast.error(response.error.data?.message || 'Login failed ❌');
       }

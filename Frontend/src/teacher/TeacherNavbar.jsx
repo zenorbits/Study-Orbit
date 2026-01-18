@@ -1,77 +1,101 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toggleMode } from "../redux/features/toggleThemeSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const TeacherNavbar = () => {
+  const selector = useSelector((state) => state.toggleTheme.value);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    if (selector === "Dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [selector]);
+
+  const handleLogout = () => {
+    // Clear user info from Redux/localStorage here
+    localStorage.removeItem("user");
+    console.log("Logged out");
+    navigate("/login");
+  };
+
   return (
-    <nav className="w-full h-20 shadow-lg flex items-center justify-between px-6 md:px-12  text-white">
-      {/* Logo / Title */}
-      <div className="title font-bold text-2xl tracking-wide">
-        StudyOrbit
-      </div>
+    <nav
+      className={`w-full h-20 flex items-center justify-between px-6 md:px-12 
+      shadow-lg relative border-b 
+      ${selector === "Dark"
+          ? "text-white bg-black/40 backdrop-blur-md border-emerald-500"
+          : "text-sky-900 bg-gradient-to-r from-sky-200 via-sky-300 to-sky-400 border-sky-300"}`}
+    >
+      {/* Logo */}
+      <Link to='/teacher'>
+        <div className={`font-bold text-2xl tracking-wide ${selector === "Dark" ? "text-emerald-400" : "text-sky-900"}`}>
+          StudyOrbit
+        </div>
+      </Link>
 
       {/* Hamburger Menu (Mobile) */}
       <div className="md:hidden">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="text-white focus:outline-none"
+          className="flex flex-col justify-center items-center w-8 h-8 focus:outline-none group"
+          aria-label="Toggle Menu"
         >
-          {/* Icon */}
-          {isOpen ? (
-            <span className="text-2xl">&times;</span> // Close icon
-          ) : (
-            <span className="text-2xl">&#9776;</span> // Hamburger icon
-          )}
+          <span className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "rotate-45 translate-y-2" : ""}`} />
+          <span className={`h-1 w-8 bg-current rounded my-1 transition-opacity duration-300 ${isOpen ? "opacity-0" : "opacity-100"}`} />
+          <span className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "-rotate-45 -translate-y-2" : ""}`} />
         </button>
       </div>
 
-      {/* Links + Profile */}
+      {/* Links + Profile + Toggle + Logout */}
       <div
-        className={`flex-col md:flex md:flex-row md:items-center md:gap-12 absolute md:static top-20 left-0 w-full md:w-auto bg-gray-900 md:bg-transparent transition-all duration-300 ease-in-out ${
-          isOpen ? "flex" : "hidden"
-        }`}
+        className={`flex-col md:flex md:flex-row md:items-center md:gap-12 absolute md:static 
+          top-20 left-0 w-full md:w-auto transition-all duration-500 ease-in-out z-50 
+          ${isOpen ? "flex" : "hidden"} 
+          ${selector === "Dark"
+            ? "bg-black/90 backdrop-blur-md shadow-lg"
+            : "bg-transparent"} `}
       >
-        {/* Navigation Links */}
-        <ul className="flex flex-col md:flex-row gap-6 md:gap-8 font-medium px-6 md:px-0 py-4 md:py-0">
-          <li>
-            <Link
-              to="/"
-              className="hover:text-emerald-400 transition duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/assignments"
-              className="hover:text-emerald-400 transition duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Assignments
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/announcements"
-              className="hover:text-emerald-400 transition duration-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Announcements
-            </Link>
-          </li>
-        </ul>
 
-        {/* Profile Button */}
-        <div className="px-6 md:px-0 pb-4 md:pb-0">
-          <button className="bg-emerald-400 px-4 py-2 rounded-xl font-bold text-black hover:bg-emerald-500 transition duration-200 shadow-md w-full md:w-auto">
-            Profile
-          </button>
-        </div>
+        {/* Profile (Avatar + Name) */}
+        <Link to="/profile">
+          <div className="flex items-center gap-3 px-6 md:px-0 py-4 md:py-0 hover:opacity-90 transition">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwMPjHEmoDlOtA_YduTR5talb_zihtvdEgrA&s"
+              alt="Profile"
+              className={`w-10 h-10 rounded-full border-2 shadow-md ${selector === "Dark" ? "border-emerald-400" : "border-sky-500"}`}
+            />
+            <span className={`font-semibold ${selector === "Dark" ? "text-emerald-400" : "text-sky-900"}`}>
+              Henry Cavill
+            </span>
+          </div>
+        </Link>
+
+        {/* Dark/Light Toggle */}
+        <button
+          onClick={() => dispatch(toggleMode())}
+          className={`mt-4 md:mt-0 px-5 py-2 rounded-full font-semibold shadow-md hover:scale-105 hover:shadow-lg transition 
+            ${selector === "Dark" ? "bg-emerald-500 text-white" : "bg-sky-500 text-white"}`}
+        >
+          {selector === "Dark" ? "Light Mode ☀️" : "Dark Mode 🌙"}
+        </button>
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className={`mt-4 md:mt-0 px-5 py-2 rounded-full font-semibold shadow-md hover:scale-105 hover:shadow-lg transition 
+            ${selector === "Dark" ? "bg-red-500 text-white" : "bg-red-600 text-white"}`}
+        >
+          Logout
+        </button>
       </div>
     </nav>
   );
 };
 
-export default TeacherNavbar;
+export default TeacherNavbar; 
