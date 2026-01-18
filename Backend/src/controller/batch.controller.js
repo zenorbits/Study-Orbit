@@ -4,12 +4,24 @@ const createBatch = async (req, res) => {
     try {
         const { batchname, description } = req.body;
 
+        const generateUniqueBatchCode = async () => {
+            let code;
+            let exists = true;
+            while (exists) {
+                code = Math.random().toString(36).substring(2, 8).toUpperCase();
+                exists = await batchModel.findOne({ code });
+            }
+            return code;
+        };
+
+
         // Create new batch with default status "pending"
         const batch = await batchModel.create({
             batchname,
             description,
             createdBy: req.user.id, // comes from auth middleware
-            status: "pending"
+            status: "pending",
+            code: await generateBatchCode()
         });
 
         res.status(201).json({

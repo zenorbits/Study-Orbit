@@ -1,17 +1,16 @@
-import React from 'react'
-import TeacherNavbar from './TeacherNavbar'
-import TeacherMainBody from './TeacherMainBody'
-import Footer from '../components/Footer'
-import { Route } from 'react-router-dom'
+import React from 'react';
+import TeacherNavbar from './TeacherNavbar';
+import Footer from '../components/Footer';
+import { Outlet } from 'react-router-dom';
 
 const TeacherPage = () => {
   return (
     <div className='overflow-x-hidden h-full'>
-        <TeacherNavbar/>
-        <TeacherMainBody/>
-        <Footer/>
+      <TeacherNavbar />
+      <Outlet />   {/* Nested routes will render here */}
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default TeacherPage
+export default TeacherPage;

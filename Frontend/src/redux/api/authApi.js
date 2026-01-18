@@ -29,4 +29,3 @@ export const authApi = createApi({
 
 
 export const { useUserRegisterMutation, useUserLoginMutation, useUserLogoutMutation } = authApi
-export default authApi
