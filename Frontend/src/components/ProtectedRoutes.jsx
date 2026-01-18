@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import jwtDecode from "jwt-decode";
+import {jwtDecode} from 'jwt-decode'
 
 const ProtectedRoutes = ({ children, allowedRoles }) => {
     const { token, role, isAuthenticated } = useSelector((state) => state.auth);
