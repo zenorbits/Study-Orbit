@@ -6,19 +6,20 @@ import { useUserLogoutMutation } from "../redux/api/authApi";
 import { logout } from "../redux/features/authApiSlice";
 
 const TeacherNavbar = () => {
-  const selector = useSelector((state) => state.toggleTheme.value);
+  const theme = useSelector((state) => state.toggleTheme.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [logoutMutation] = useUserLogoutMutation();
+  const [name, setname] = useState('');
 
   useEffect(() => {
-    if (selector === "Dark") {
+    if (theme === "Dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
-  }, [selector]);
+  }, [theme]);
 
   const handleLogout = async () => {
     try {
@@ -36,7 +37,7 @@ const TeacherNavbar = () => {
     <nav
       className={`w-full h-20 flex items-center justify-between px-6 md:px-12 
       shadow-lg relative border-b 
-      ${selector === "Dark"
+      ${theme === "Dark"
         ? "text-white bg-black/40 backdrop-blur-md border-emerald-500"
         : "text-sky-900 bg-gradient-to-r from-sky-200 via-sky-300 to-sky-400 border-sky-300"}`}
     >
@@ -44,7 +45,7 @@ const TeacherNavbar = () => {
       <Link to="/teacher">
         <div
           className={`font-bold text-2xl tracking-wide ${
-            selector === "Dark" ? "text-emerald-400" : "text-sky-900"
+            theme === "Dark" ? "text-emerald-400" : "text-sky-900"
           }`}
         >
           StudyOrbit
@@ -82,7 +83,7 @@ const TeacherNavbar = () => {
         className={`flex-col md:flex md:flex-row md:items-center md:gap-12 absolute md:static 
           top-20 left-0 w-full md:w-auto transition-all duration-500 ease-in-out z-50 
           ${isOpen ? "flex" : "hidden"} 
-          ${selector === "Dark"
+          ${theme === "Dark"
             ? "bg-black/90 backdrop-blur-md shadow-lg"
             : "bg-transparent"} `}
       >
@@ -93,12 +94,12 @@ const TeacherNavbar = () => {
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwMPjHEmoDlOtA_YduTR5talb_zihtvdEgrA&s"
               alt="Profile"
               className={`w-10 h-10 rounded-full border-2 shadow-md ${
-                selector === "Dark" ? "border-emerald-400" : "border-sky-500"
+                theme === "Dark" ? "border-emerald-400" : "border-sky-500"
               }`}
             />
             <span
               className={`font-semibold ${
-                selector === "Dark" ? "text-emerald-400" : "text-sky-900"
+                theme === "Dark" ? "text-emerald-400" : "text-sky-900"
               }`}
             >
               Henry Cavill
@@ -110,16 +111,16 @@ const TeacherNavbar = () => {
         <button
           onClick={() => dispatch(toggleMode())}
           className={`mt-4 md:mt-0 px-5 py-2 rounded-full font-semibold shadow-md hover:scale-105 hover:shadow-lg transition 
-            ${selector === "Dark" ? "bg-emerald-500 text-white" : "bg-sky-500 text-white"}`}
+            ${theme === "Dark" ? "bg-emerald-500 text-white" : "bg-sky-500 text-white"}`}
         >
-          {selector === "Dark" ? "Light Mode ☀️" : "Dark Mode 🌙"}
+          {theme === "Dark" ? "Light Mode ☀️" : "Dark Mode 🌙"}
         </button>
 
         {/* Logout Button */}
         <button
           onClick={handleLogout}
           className={`mt-4 md:mt-0 px-5 py-2 rounded-full font-semibold shadow-md hover:scale-105 hover:shadow-lg transition 
-            ${selector === "Dark" ? "bg-red-500 text-white" : "bg-red-600 text-white"}`}
+            ${theme === "Dark" ? "bg-red-500 text-white" : "bg-red-600 text-white"}`}
         >
           Logout
         </button>

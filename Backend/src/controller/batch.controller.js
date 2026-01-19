@@ -19,14 +19,14 @@ const createBatch = async (req, res) => {
         const batch = await batchModel.create({
             batchname,
             description,
-            createdBy: req.user.id, // comes from auth middleware
+            createdBy: req.user.id, //  comes from auth middleware
             status: "pending",
-            code: await generateBatchCode()
+            code: await generateUniqueBatchCode()
         });
 
         res.status(201).json({
             message: "Batch created successfully",
-            batch
+            batch,
         });
     } catch (error) {
         res.status(500).json({
@@ -36,4 +36,19 @@ const createBatch = async (req, res) => {
     }
 };
 
-module.exports = { createBatch };
+const fetchTeacherBatch = async (req, res) => {
+    try {
+        const batches = await batchModel.find({ createdBy: req.user.id });
+        res.status(200).json({
+            message: "Fetched your batches successfully",
+            batches,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error fetching batches",
+            error: error.message,
+        });
+    }
+};
+
+module.exports = { createBatch, fetchTeacherBatch };

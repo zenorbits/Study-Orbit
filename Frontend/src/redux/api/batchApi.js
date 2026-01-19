@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const batchApi = createApi({
     reducerPath: 'batchApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/batch' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/batch', credentials: 'include' }),
     endpoints: (build) => ({
         batchCreation: build.mutation({
             query: (info) => ({
@@ -11,9 +11,16 @@ export const batchApi = createApi({
                 method: 'POST',
                 body: info
             })
+        }),
+        getBatchForTeacher: build.query({
+            query: () => ({
+                url: '/mybatch',
+                method: 'GET',
+            })
         })
     })
+
 })
 
 
-const { useBatchCreationMutation } = batchApi
+export const { useBatchCreationMutation,useGetBatchForTeacherQuery } = batchApi

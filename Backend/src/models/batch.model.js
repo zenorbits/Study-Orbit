@@ -21,6 +21,11 @@ const batchSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    code:{
+        type:String,
+        unique:true,
+        required:true
     }
 
     

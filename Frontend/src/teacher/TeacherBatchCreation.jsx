@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useBatchCreationMutation } from "../redux/api/batchApi";
+import { toast } from "react-toastify"; // ✅ make sure you installed react-toastify
 
 const TeacherBatchCreation = () => {
-  const [batchName, setBatchName] = useState('');
-  const [batchDescription, setBatchDescription] = useState('');
+  const [batchName, setBatchName] = useState("");
+  const [batchDescription, setBatchDescription] = useState("");
 
-  const handleSubmit = (e) => {
+  const dispatch = useDispatch();
+  const [batchCreationMutation, { isLoading }] = useBatchCreationMutation();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ batchName, batchDescription });
 
-    // Reset form after submit
-    setBatchName('');
-    setBatchDescription('');
+    try {
+      const response = await batchCreationMutation({
+        batchname: batchName,
+        description: batchDescription,
+      }).unwrap(); // ✅ unwrap gives direct success/error
+
+      toast.success(`Batch "${response.batch.batchname}" created successfully 🎉`);
+      setBatchName("");
+      setBatchDescription("");
+    } catch (err) {
+      toast.error("Failed to create batch ❌");
+      console.error("Batch creation error:", err);
+    }
   };
 
   return (
@@ -73,10 +88,14 @@ const TeacherBatchCreation = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 rounded-lg font-semibold transition duration-200 
-            bg-sky-500 hover:bg-sky-600 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white"
+            disabled={isLoading} // ✅ disable while loading
+            className={`w-full py-3 rounded-lg font-semibold transition duration-200 
+              ${isLoading 
+                ? "bg-gray-400 cursor-not-allowed" 
+                : "bg-sky-500 hover:bg-sky-600 dark:bg-emerald-600 dark:hover:bg-emerald-700"} 
+              text-white`}
           >
-            Create Batch
+            {isLoading ? "Creating..." : "Create Batch"}
           </button>
         </form>
       </div>

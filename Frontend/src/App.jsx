@@ -27,7 +27,7 @@ const App = () => {
 
         <Route path='/teacher/*' element={<ProtectedRoutes allowedRoles={['teacher']}><TeacherPage /></ProtectedRoutes>}>
           <Route index element={<TeacherMainBody/>} />
-          <Route path='batch' element={<TeacherBatchCreation />} />
+          <Route path='batchcreate' element={<TeacherBatchCreation />} />
           <Route path='announcement' />
         </Route>
       </Routes>
