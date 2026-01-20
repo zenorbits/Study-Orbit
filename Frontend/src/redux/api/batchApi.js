@@ -14,7 +14,7 @@ export const batchApi = createApi({
         }),
         getBatchForTeacher: build.query({
             query: () => ({
-                url: '/mybatch',
+                url: '/allforTeacherbatch',
                 method: 'GET',
             })
         })

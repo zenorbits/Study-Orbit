@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useBatchCreationMutation } from "../redux/api/batchApi";
+import { useBatchCreationMutation } from "../../redux/api/batchApi";
 import { toast } from "react-toastify"; // ✅ make sure you installed react-toastify
 
 const TeacherBatchCreation = () => {

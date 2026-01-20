@@ -8,8 +8,10 @@ import { ToastContainer } from 'react-toastify';
 import AdminPage from './Admin/AdminPage';
 import TeacherPage from './teacher/TeacherPage';
 import ProtectedRoutes from './components/ProtectedRoutes';
-import TeacherBatchCreation from './teacher/TeacherBatchCreation';
-import TeacherMainBody from './teacher/TeacherMainBody';
+import TeacherMainBody from './teacher/TeacherMainBody'
+import TeacherBatchCreation from './teacher/batch(Teacher)/TeacherBatchCreation';
+import ManageBatch from './teacher/batch(Teacher)/ManageBatch';
+import AllTeacherBatch from './teacher/batch(Teacher)/AllTeacherBatch';
 
 const App = () => {
   return (
@@ -27,8 +29,9 @@ const App = () => {
 
         <Route path='/teacher/*' element={<ProtectedRoutes allowedRoles={['teacher']}><TeacherPage /></ProtectedRoutes>}>
           <Route index element={<TeacherMainBody/>} />
-          <Route path='batchcreate' element={<TeacherBatchCreation />} />
-          <Route path='announcement' />
+          <Route path='createbatch' element={<TeacherBatchCreation />} />
+          <Route path='managebatch' element={<ManageBatch/>} />
+          <Route path='batch' element={<AllTeacherBatch/>} />
         </Route>
       </Routes>
       <ToastContainer position="top-right" autoClose={2500} />

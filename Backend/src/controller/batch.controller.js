@@ -38,9 +38,10 @@ const createBatch = async (req, res) => {
 
 const fetchTeacherBatch = async (req, res) => {
     try {
-        const batches = await batchModel.find({ createdBy: req.user.id });
+        // fetch all batches regardless of who created them
+        const batches = await batchModel.find().populate("createdBy", "name email");
         res.status(200).json({
-            message: "Fetched your batches successfully",
+            message: "Fetched all batches successfully",
             batches,
         });
     } catch (error) {

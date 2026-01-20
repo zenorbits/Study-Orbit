@@ -8,7 +8,7 @@ const Footer = () => {
 
   return (
     <footer
-      className={`w-full py-10 shadow-lg border-t 
+      className={` w-full py-10 shadow-lg border-t 
         text-sky-900 dark:text-white 
         ${selector === "Dark" 
           ? "bg-black/40 backdrop-blur-md border-emerald-500" 

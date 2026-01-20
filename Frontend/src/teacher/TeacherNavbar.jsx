@@ -11,7 +11,6 @@ const TeacherNavbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [logoutMutation] = useUserLogoutMutation();
-  const [name, setname] = useState('');
 
   useEffect(() => {
     if (theme === "Dark") {
@@ -26,7 +25,6 @@ const TeacherNavbar = () => {
       await logoutMutation().unwrap();
       dispatch(logout());
       localStorage.removeItem("user");
-      console.log("Logged out");
       navigate("/login");
     } catch (err) {
       console.error("Logout failed", err);
@@ -35,72 +33,82 @@ const TeacherNavbar = () => {
 
   return (
     <nav
-      className={`w-full h-20 flex items-center justify-between px-6 md:px-12 
-      shadow-lg relative border-b 
+      className={`w-full flex flex-col md:flex-row md:items-center md:justify-between px-6 md:px-12 
+      shadow-lg border-b 
       ${theme === "Dark"
-        ? "text-white bg-black/40 backdrop-blur-md border-emerald-500"
-        : "text-sky-900 bg-gradient-to-r from-sky-200 via-sky-300 to-sky-400 border-sky-300"}`}
+          ? "text-white bg-black/40 backdrop-blur-md border-emerald-500"
+          : "text-sky-900 bg-gradient-to-r from-sky-200 via-sky-300 to-sky-400 border-sky-300"}`}
     >
-      {/* Logo */}
-      <Link to="/teacher">
-        <div
-          className={`font-bold text-2xl tracking-wide ${
-            theme === "Dark" ? "text-emerald-400" : "text-sky-900"
-          }`}
-        >
-          StudyOrbit
-        </div>
-      </Link>
+      {/* Top Row: Logo + Hamburger */}
+      <div className="flex items-center justify-between h-20">
+        {/* Logo */}
+        <Link to="/teacher">
+          <div
+            className={`font-bold text-2xl tracking-wide ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"
+              }`}
+          >
+            StudyOrbit
+          </div>
+        </Link>
 
-      {/* Hamburger Menu (Mobile) */}
-      <div className="md:hidden">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          aria-expanded={isOpen}
-          aria-label="Toggle Menu"
-          className="flex flex-col justify-center items-center w-8 h-8 focus:outline-none group"
-        >
-          <span
-            className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${
-              isOpen ? "rotate-45 translate-y-2" : ""
-            }`}
-          />
-          <span
-            className={`h-1 w-8 bg-current rounded my-1 transition-opacity duration-300 ${
-              isOpen ? "opacity-0" : "opacity-100"
-            }`}
-          />
-          <span
-            className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${
-              isOpen ? "-rotate-45 -translate-y-2" : ""
-            }`}
-          />
-        </button>
+        {/* Hamburger Menu (Mobile) */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-expanded={isOpen}
+            aria-label="Toggle Menu"
+            className="flex flex-col justify-center items-center w-8 h-8 focus:outline-none group"
+          >
+            <span
+              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "rotate-45 translate-y-2" : ""
+                }`}
+            />
+            <span
+              className={`h-1 w-8 bg-current rounded my-1 transition-opacity duration-300 ${isOpen ? "opacity-0" : "opacity-100"
+                }`}
+            />
+            <span
+              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "-rotate-45 -translate-y-2" : ""
+                }`}
+            />
+          </button>
+        </div>
       </div>
 
       {/* Links + Profile + Toggle + Logout */}
+      {/* Links + Profile + Toggle + Logout */}
       <div
-        className={`flex-col md:flex md:flex-row md:items-center md:gap-12 absolute md:static 
-          top-20 left-0 w-full md:w-auto transition-all duration-500 ease-in-out z-50 
-          ${isOpen ? "flex" : "hidden"} 
-          ${theme === "Dark"
-            ? "bg-black/90 backdrop-blur-md shadow-lg"
-            : "bg-transparent"} `}
+        className={`flex-col md:flex md:flex-row md:items-center md:gap-12 w-full md:w-auto 
+    transition-all duration-500 ease-in-out
+    ${isOpen ? "flex" : "hidden"} 
+    md:bg-transparent`}
       >
+        {/* Navigation Links */}
+        <Link
+          to="/teacher"
+          className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition"
+        >
+          Home
+        </Link>
+        <Link
+          to="/teacher/batch"
+          className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition"
+        >
+          Batch
+        </Link>
+
         {/* Profile */}
         <Link to="/profile">
           <div className="flex items-center gap-3 px-6 md:px-0 py-4 md:py-0 hover:opacity-90 transition">
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwMPjHEmoDlOtA_YduTR5talb_zihtvdEgrA&s"
               alt="Profile"
-              className={`w-10 h-10 rounded-full border-2 shadow-md ${
-                theme === "Dark" ? "border-emerald-400" : "border-sky-500"
-              }`}
+              className={`w-10 h-10 rounded-full border-2 shadow-md ${theme === "Dark" ? "border-emerald-400" : "border-sky-500"
+                }`}
             />
             <span
-              className={`font-semibold ${
-                theme === "Dark" ? "text-emerald-400" : "text-sky-900"
-              }`}
+              className={`font-semibold ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"
+                }`}
             >
               Henry Cavill
             </span>
@@ -111,7 +119,7 @@ const TeacherNavbar = () => {
         <button
           onClick={() => dispatch(toggleMode())}
           className={`mt-4 md:mt-0 px-5 py-2 rounded-full font-semibold shadow-md hover:scale-105 hover:shadow-lg transition 
-            ${theme === "Dark" ? "bg-emerald-500 text-white" : "bg-sky-500 text-white"}`}
+      ${theme === "Dark" ? "bg-emerald-500 text-white" : "bg-sky-500 text-white"}`}
         >
           {theme === "Dark" ? "Light Mode ☀️" : "Dark Mode 🌙"}
         </button>
@@ -120,7 +128,7 @@ const TeacherNavbar = () => {
         <button
           onClick={handleLogout}
           className={`mt-4 md:mt-0 px-5 py-2 rounded-full font-semibold shadow-md hover:scale-105 hover:shadow-lg transition 
-            ${theme === "Dark" ? "bg-red-500 text-white" : "bg-red-600 text-white"}`}
+      ${theme === "Dark" ? "bg-red-500 text-white" : "bg-red-600 text-white"}`}
         >
           Logout
         </button>
