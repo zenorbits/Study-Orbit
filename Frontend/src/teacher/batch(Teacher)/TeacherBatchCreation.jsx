@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useBatchCreationMutation } from "../../redux/api/batchApi";
 import { toast } from "react-toastify"; // ✅ make sure you installed react-toastify
+import { setBatchInfo } from "../../redux/features/batchSlice";
 
 const TeacherBatchCreation = () => {
   const [batchName, setBatchName] = useState("");
@@ -18,6 +19,7 @@ const TeacherBatchCreation = () => {
         batchname: batchName,
         description: batchDescription,
       }).unwrap(); // ✅ unwrap gives direct success/error
+
 
       toast.success(`Batch "${response.batch.batchname}" created successfully 🎉`);
       setBatchName("");
@@ -90,8 +92,8 @@ const TeacherBatchCreation = () => {
             type="submit"
             disabled={isLoading} // ✅ disable while loading
             className={`w-full py-3 rounded-lg font-semibold transition duration-200 
-              ${isLoading 
-                ? "bg-gray-400 cursor-not-allowed" 
+              ${isLoading
+                ? "bg-gray-400 cursor-not-allowed"
                 : "bg-sky-500 hover:bg-sky-600 dark:bg-emerald-600 dark:hover:bg-emerald-700"} 
               text-white`}
           >

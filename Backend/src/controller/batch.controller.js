@@ -68,6 +68,25 @@ const fetchPendingBatch = async (req, res) => {
             error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
-}
+};
 
-module.exports = { createBatch, fetchTeacherBatch,fetchPendingBatch };
+// controllers/batchController.js
+const updateBatchStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const batch = await BatchModel.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
+
+        if (!batch) return res.status(404).json({ message: "Batch not found" });
+        res.status(200).json({ message: "Status updated", batch });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating batch status", error });
+    }
+};
+
+module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch };
