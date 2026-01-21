@@ -15,7 +15,13 @@ export const batchApi = createApi({
         getBatchForTeacher: build.query({
             query: () => ({
                 url: '/allforTeacherbatch',
-                method: 'GET',
+                method: 'GET'
+            })
+        }),
+        getPendingBatch: build.query({
+            query: () => ({
+                url: '/pendingbatches',
+                method: 'GET'
             })
         })
     })
@@ -23,4 +29,4 @@ export const batchApi = createApi({
 })
 
 
-export const { useBatchCreationMutation,useGetBatchForTeacherQuery } = batchApi
+export const { useBatchCreationMutation, useGetBatchForTeacherQuery,useGetPendingBatchQuery } = batchApi
