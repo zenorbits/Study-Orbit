@@ -98,7 +98,7 @@ const TeacherNavbar = () => {
         </Link>
 
         {/* Profile */}
-        <Link to="/profile">
+        <Link to="/teacher/profile">
           <div className="flex items-center gap-3 px-6 md:px-0 py-4 md:py-0 hover:opacity-90 transition">
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwMPjHEmoDlOtA_YduTR5talb_zihtvdEgrA&s"

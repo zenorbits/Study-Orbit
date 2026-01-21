@@ -12,6 +12,7 @@ import TeacherMainBody from './teacher/TeacherMainBody'
 import TeacherBatchCreation from './teacher/batch(Teacher)/TeacherBatchCreation';
 import ManageBatch from './teacher/batch(Teacher)/ManageBatch';
 import AllTeacherBatch from './teacher/batch(Teacher)/AllTeacherBatch';
+import AdminMainBody from './admin/AdminMainBody';
 
 const App = () => {
   return (
@@ -32,6 +33,9 @@ const App = () => {
           <Route path='createbatch' element={<TeacherBatchCreation />} />
           <Route path='managebatch' element={<ManageBatch/>} />
           <Route path='batch' element={<AllTeacherBatch/>} />
+        </Route>
+         <Route path='/admin/*' element={<ProtectedRoutes allowedRoles={['admin']}><AdminPage /></ProtectedRoutes>}>
+          <Route index element={<AdminMainBody/>} />
         </Route>
       </Routes>
       <ToastContainer position="top-right" autoClose={2500} />
