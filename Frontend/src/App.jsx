@@ -13,6 +13,7 @@ import TeacherBatchCreation from './teacher/batch(Teacher)/TeacherBatchCreation'
 import ManageBatch from './teacher/batch(Teacher)/ManageBatch';
 import AllTeacherBatch from './teacher/batch(Teacher)/AllTeacherBatch';
 import AdminMainBody from './admin/AdminMainBody';
+import PendingBatchPages from './admin/Batch(Admin)/PendingBatchPages';
 
 const App = () => {
   return (
@@ -25,7 +26,6 @@ const App = () => {
         {/* ✅ Only render ParentAuthPage for auth routes */}
         <Route path="/register" element={<ParentAuthPage><RegisterPage /></ParentAuthPage>} />
         <Route path="/login" element={<ParentAuthPage><LoginPage /></ParentAuthPage>} />
-        <Route path='/admin' element={<AdminPage />} />
 
 
         <Route path='/teacher/*' element={<ProtectedRoutes allowedRoles={['teacher']}><TeacherPage /></ProtectedRoutes>}>
@@ -36,6 +36,7 @@ const App = () => {
         </Route>
          <Route path='/admin/*' element={<ProtectedRoutes allowedRoles={['admin']}><AdminPage /></ProtectedRoutes>}>
           <Route index element={<AdminMainBody/>} />
+          <Route path='pendingbatch' element={<PendingBatchPages/>} />
         </Route>
       </Routes>
       <ToastContainer position="top-right" autoClose={2500} />
