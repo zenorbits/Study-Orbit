@@ -52,4 +52,22 @@ const fetchTeacherBatch = async (req, res) => {
     }
 };
 
-module.exports = { createBatch, fetchTeacherBatch };
+const fetchPendingBatch = async (req, res) => {
+    try {
+        const batches = await batchModel.find({ status: 'pending' });
+
+        res.status(200).json({
+            message: 'Fetched Pending batches successfully',
+            batches,
+            count: batches.length
+        })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Server error while fetching batches",
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
+        });
+    }
+}
+
+module.exports = { createBatch, fetchTeacherBatch,fetchPendingBatch };
