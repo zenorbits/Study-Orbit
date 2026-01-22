@@ -46,7 +46,7 @@ const LoginPage = () => {
         dispatch(setCredentials({
           username: user.username,
           email: user.email,
-          role: user.role,
+          role: user.role.toLowerCase(),
           token
         }));
 

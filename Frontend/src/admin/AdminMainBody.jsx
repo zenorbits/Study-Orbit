@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 const AdminMainBody = () => {
   const { data: pendingBatchData, isLoading } = useGetPendingBatchQuery();
-``
+
   const stats = [
     {
       title: "Total Teachers",
@@ -104,7 +104,7 @@ const AdminMainBody = () => {
           </Link>
 
           <Link
-            to="/admin/batches"
+            to="/admin/managebatch"
             className="flex flex-col items-start gap-2 px-6 py-4 rounded-lg 
               bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 
               font-semibold shadow-md border border-purple-400 hover:shadow-purple-300 

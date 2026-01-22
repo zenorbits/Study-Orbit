@@ -5,7 +5,7 @@ import LoginPage from './AuthPages/LoginPage';
 import ParentAuthPage from './AuthPages/ParentAuthPage';
 import LandingPage from './components/LandingPage';
 import { ToastContainer } from 'react-toastify';
-import AdminPage from './Admin/AdminPage';
+import AdminPage from './admin/AdminPage';
 import TeacherPage from './teacher/TeacherPage';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import TeacherMainBody from './teacher/TeacherMainBody'
@@ -29,14 +29,16 @@ const App = () => {
 
 
         <Route path='/teacher/*' element={<ProtectedRoutes allowedRoles={['teacher']}><TeacherPage /></ProtectedRoutes>}>
-          <Route index element={<TeacherMainBody/>} />
+          <Route index element={<TeacherMainBody />} />
           <Route path='createbatch' element={<TeacherBatchCreation />} />
-          <Route path='managebatch' element={<ManageBatch/>} />
-          <Route path='batch' element={<AllTeacherBatch/>} />
+          <Route path='managebatch' element={<ManageBatch />} />
+          <Route path='batch' element={<AllTeacherBatch />} />
         </Route>
-         <Route path='/admin/*' element={<ProtectedRoutes allowedRoles={['admin']}><AdminPage /></ProtectedRoutes>}>
-          <Route index element={<AdminMainBody/>} />
-          <Route path='pendingbatch' element={<PendingBatchPages/>} />
+        <Route path='/admin/*' element={<ProtectedRoutes allowedRoles={['admin']}><AdminPage /></ProtectedRoutes>}>
+          <Route index element={<AdminMainBody />} />
+          <Route path='pendingbatch' element={<PendingBatchPages />} />
+          <Route path='managebatch' element={<ManageBatch />} />
+          <Route path='createbatch' element={<TeacherBatchCreation />} />
         </Route>
       </Routes>
       <ToastContainer position="top-right" autoClose={2500} />

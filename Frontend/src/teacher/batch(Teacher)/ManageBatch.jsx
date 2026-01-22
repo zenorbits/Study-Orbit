@@ -4,12 +4,16 @@ import { Link } from "react-router-dom";
 
 const ManageBatch = () => {
   const selector = useSelector((state) => state.toggleTheme.value);
+  const { role } = useSelector((state) => state.auth); // ✅ get role from Redux
+
+  // Build links based on role
+  const basePath = role === "admin" ? "/admin" : "/teacher";
 
   const actions = [
-    { title: "➕ Create Batch", description: "Add a new batch for students", link: "/teacher/createbatch" },
-    { title: "✏️ Edit Batch", description: "Update batch details and information", link: "/teacher/editbatch" },
-    { title: "🗑 Remove Batch", description: "Delete an existing batch", link: "/teacher/removebatch" },
-    { title: "🔍 View Batch Details", description: "See batch codes and student info", link: "/teacher/viewbatch" },
+    { title: "➕ Create Batch", description: "Add a new batch for students", link: `${basePath}/createbatch` },
+    { title: "✏️ Edit Batch", description: "Update batch details and information", link: `${basePath}/editbatch` },
+    { title: "🗑 Remove Batch", description: "Delete an existing batch", link: `${basePath}/removebatch` },
+    { title: "🔍 View Batch Details", description: "See batch codes and student info", link: `${basePath}/viewbatch` },
   ];
 
   useEffect(() => {
