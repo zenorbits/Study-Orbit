@@ -72,21 +72,22 @@ const fetchPendingBatch = async (req, res) => {
 
 // controllers/batchController.js
 const updateBatchStatus = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { status } = req.body;
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
 
-        const batch = await BatchModel.findByIdAndUpdate(
-            id,
-            { status },
-            { new: true }
-        );
+    const batch = await batchModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
 
-        if (!batch) return res.status(404).json({ message: "Batch not found" });
-        res.status(200).json({ message: "Status updated", batch });
-    } catch (error) {
-        res.status(500).json({ message: "Error updating batch status", error });
-    }
+    if (!batch) return res.status(404).json({ message: "Batch not found" });
+    res.status(200).json({ message: "Status updated", batch });
+  } catch (error) {
+    console.error("Update request failed:", req.params, req.body, error);
+    res.status(500).json({ message: "Error updating batch status", error: error.message });
+  }
 };
 
-module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch };
+module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus };

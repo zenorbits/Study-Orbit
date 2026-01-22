@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 const AdminMainBody = () => {
   const { data: pendingBatchData, isLoading } = useGetPendingBatchQuery();
-
+``
   const stats = [
     {
       title: "Total Teachers",

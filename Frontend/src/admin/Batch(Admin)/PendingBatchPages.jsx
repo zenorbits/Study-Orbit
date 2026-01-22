@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useGetPendingBatchQuery } from "../../redux/api/batchApi";
+import { useGetPendingBatchQuery, useUpdateBatchStatusMutation } from "../../redux/api/batchApi";
+import { useEffect } from "react";
 
 const PendingBatchPages = () => {
   const [decisions, setDecisions] = useState({});
-  const { data, isLoading } = useGetPendingBatchQuery();
+  const { data, isLoading,refetch } = useGetPendingBatchQuery();
+  const [updateBatchStatus] = useUpdateBatchStatusMutation();
 
   const batches = data?.batches || [];
 
@@ -16,18 +18,31 @@ const PendingBatchPages = () => {
     setDecisions((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleConfirm = (id) => {
+  const handleConfirm = async (id) => {
     const decision = decisions[id];
     if (!decision) {
       toast.warn("⚠️ Please select an action before confirming.");
       return;
     }
 
-    if (decision === "Verified") {
-      toast.success(`✅ Batch ${id} has been marked as Verified`);
-    } else if (decision === "Rejected") {
-      toast.error(`❌ Batch ${id} has been marked as Rejected`);
+    setDecisions((prev) => ({ ...prev, [id]: decision }));
+
+    try {
+      await updateBatchStatus({ id, status: decision }).unwrap();
+
+      if (decision === "Verified") {
+        toast.success(`✅ Batch ${id} has been marked as Verified`);
+        refetch();
+      } else {
+        toast.error(`❌ Batch ${id} has been marked as Rejected`);
+      }
+
+    } catch (err) {
+      toast.error("❌ Failed to update batch status");
+      console.error("Update error:", err);
+
     }
+
   };
 
   return (
