@@ -24,16 +24,20 @@ export const batchApi = createApi({
                 method: 'GET'
             })
         }),
-        updateBatchStatus:build.mutation({
-            query:({id,status})=>({
-                url:`/${id}/status`,
-                method:'PATCH',
-                body:{status}
+        updateBatchStatus: build.mutation({
+            query: ({ id, status }) => ({
+                url: `/${id}/status`,
+                method: 'PATCH',
+                body: { status }
             })
+        }),
+        getVerifiedBatch: build.query({
+            url: '/verifiedbatches',
+            method: 'GET'
         })
     })
 
 })
 
 
-export const { useBatchCreationMutation, useGetBatchForTeacherQuery,useGetPendingBatchQuery,useUpdateBatchStatusMutation } = batchApi
+export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery } = batchApi

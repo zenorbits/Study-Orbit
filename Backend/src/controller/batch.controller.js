@@ -72,22 +72,48 @@ const fetchPendingBatch = async (req, res) => {
 
 // controllers/batchController.js
 const updateBatchStatus = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
 
-    const batch = await batchModel.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
+        const batch = await batchModel.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
 
-    if (!batch) return res.status(404).json({ message: "Batch not found" });
-    res.status(200).json({ message: "Status updated", batch });
-  } catch (error) {
-    console.error("Update request failed:", req.params, req.body, error);
-    res.status(500).json({ message: "Error updating batch status", error: error.message });
-  }
+        if (!batch) return res.status(404).json({ message: "Batch not found" });
+        res.status(200).json({ message: "Status updated", batch });
+    } catch (error) {
+        console.error("Update request failed:", req.params, req.body, error);
+        res.status(500).json({ message: "Error updating batch status", error: error.message });
+    }
 };
 
-module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus };
+const fetchVerifiedBatch = async (req, res) => {
+    try {
+        const batches = await batchModel.find({ status: 'verified' });
+
+        if (!batches || batches.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No verified batches found",
+                batches: []
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Fetched Verified Batch Successfully",
+            batches
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error fetching batches",
+            error: error.message,
+        });
+    }
+};
+
+module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus,fetchVerifiedBatch };
