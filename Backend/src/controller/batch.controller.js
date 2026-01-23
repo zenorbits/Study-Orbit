@@ -95,7 +95,7 @@ const fetchVerifiedBatch = async (req, res) => {
         const batches = await batchModel.find({ status: 'verified' });
 
         if (!batches || batches.length === 0) {
-            return res.status(404).json({
+            return res.status(200).json({
                 success: false,
                 message: "No verified batches found",
                 batches: []

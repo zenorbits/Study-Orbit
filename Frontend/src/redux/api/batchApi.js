@@ -32,8 +32,10 @@ export const batchApi = createApi({
             })
         }),
         getVerifiedBatch: build.query({
-            url: '/verifiedbatches',
-            method: 'GET'
+            query: () => ({
+               url: '/verifiedbatches',
+               method:'GET'
+})
         })
     })
 

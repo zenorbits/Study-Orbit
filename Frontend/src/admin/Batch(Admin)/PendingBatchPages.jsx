@@ -34,18 +34,17 @@ const PendingBatchPages = () => {
       return;
     }
 
-    setDecisions((prev) => ({ ...prev, [id]: decision }));
-
     try {
-      await updateBatchStatus({ id, status: decision }).unwrap();
+      // Always send lowercase to backend
+      await updateBatchStatus({ id, status: decision.toLowerCase() }).unwrap();
 
-      if (decision === "Verified") {
-        toast.success(`✅ Batch ${id} has been marked as Verified`);
-        refetch();
+      if (decision === "verified") {
+        toast.success(`✅ Batch ${id} has been marked as verified`);
       } else {
-        toast.error(`❌ Batch ${id} has been marked as Rejected`);
-        refetch();
+        toast.error(`❌ Batch ${id} has been marked as rejected`);
       }
+
+      refetch();
     } catch (err) {
       toast.error("❌ Failed to update batch status");
       console.error("Update error:", err);
@@ -94,8 +93,8 @@ const PendingBatchPages = () => {
                     bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 text-sm"
                 >
                   <option value="">Select Action</option>
-                  <option value="Verified">✅ Verified</option>
-                  <option value="Rejected">❌ Rejected</option>
+                  <option value="verified">✅ Verified</option>
+                  <option value="rejected">❌ Rejected</option>
                 </select>
               </div>
 
