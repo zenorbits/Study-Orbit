@@ -39,6 +39,7 @@ const App = () => {
           <Route path='pendingbatch' element={<PendingBatchPages />} />
           <Route path='managebatch' element={<ManageBatch />} />
           <Route path='createbatch' element={<TeacherBatchCreation />} />
+          <Route path='batch' element={<AllTeacherBatch />} />
         </Route>
       </Routes>
       <ToastContainer position="top-right" autoClose={2500} />

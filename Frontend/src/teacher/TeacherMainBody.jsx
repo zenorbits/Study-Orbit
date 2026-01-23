@@ -74,7 +74,7 @@ const TeacherMainBody = () => {
               <ClipboardDocumentListIcon className="w-5 h-5 text-sky-400" />
               <span>Manage Batches</span>
             </div>
-            <p className="text-sm opacity-80">Add, edit, or delete batches</p>
+            <p className="text-sm opacity-80">Manage batch details and students</p>
           </Link>
 
           <Link
@@ -88,7 +88,7 @@ const TeacherMainBody = () => {
               <AcademicCapIcon className="w-5 h-5 text-emerald-400" />
               <span>Batches</span>
             </div>
-            <p className="text-sm opacity-80">Manage batch details and students</p>
+            <p className="text-sm opacity-80">Add, edit, or delete batches</p>
           </Link>
 
           <Link

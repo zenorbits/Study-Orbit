@@ -100,7 +100,7 @@ const AdminNavbar = () => {
           Teachers
         </Link>
         <Link
-          to="/admin/batches"
+          to="/admin/batch"
           className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition"
         >
           Batches
