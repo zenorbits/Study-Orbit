@@ -10,5 +10,6 @@ router.get('/pendingbatches', middleware.authMiddleware, middleware.requiredRole
 router.patch('/:id/status', middleware.authMiddleware, middleware.requiredRole(['admin']), batchController.updateBatchStatus);
 router.get('/verifiedbatches', middleware.authMiddleware, batchController.fetchVerifiedBatch);
 router.post('/joinbatch', middleware.authMiddleware, batchController.joinBatch);
+router.get('/joinedbatches', middleware.authMiddleware, batchController.fetchJoinedBatch);
 
 module.exports = router;

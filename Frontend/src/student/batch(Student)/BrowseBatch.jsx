@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetVerifiedBatchQuery } from "../../redux/api/batchApi";
+import { useGetVerifiedBatchQuery, useJoinBatchMutation } from "../../redux/api/batchApi";
+import { toast } from "react-toastify";
 
 const BrowseBatch = () => {
   const theme = useSelector((state) => state.toggleTheme.value);
@@ -8,6 +9,8 @@ const BrowseBatch = () => {
   // RTK Query hook with loading/error/refetch states
   const { data, isLoading, isFetching, isError, refetch } = useGetVerifiedBatchQuery();
   const batches = data?.batches || [];
+
+  const [joinBatch] = useJoinBatchMutation();
 
   useEffect(() => {
     if (data) {
@@ -25,19 +28,36 @@ const BrowseBatch = () => {
     setMessage("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Replace with your actual join logic (API call, etc.)
-    setMessage(`Requested to join ${selectedBatch.batchname} with code: ${batchCode}`);
-    setSelectedBatch(null); // close form after submit
+    try {
+      const response = await joinBatch({ batchId: selectedBatch._id, batchCode }).unwrap();
+
+
+      if (response.success) {
+        toast.success(response.message); // success toast
+        setSelectedBatch(null);
+        refetch();
+      } else {
+        toast.error(response.message); // already joined case
+      }
+    } catch (error) {
+      // Distinguish invalid code vs other errors
+      if (error?.status === 404) {
+        toast.error("❌ Invalid or unverified batch code");
+      } else {
+        toast.error(error.data?.message || "❌ Failed to join batch");
+      }
+      console.error(error);
+    }
   };
 
   return (
     <div
       className={`min-h-[80vh] flex flex-col items-center py-10 
       ${theme === "Dark"
-        ? "bg-gradient-to-br from-gray-900 via-black to-emerald-900 text-white"
-        : "bg-gradient-to-br from-white via-sky-100 to-sky-300 text-sky-900"}`}
+          ? "bg-gradient-to-br from-gray-900 via-black to-emerald-900 text-white"
+          : "bg-gradient-to-br from-white via-sky-100 to-sky-300 text-sky-900"}`}
     >
       {/* Header */}
       <h1 className="text-3xl font-bold mb-4">Browse Batches</h1>

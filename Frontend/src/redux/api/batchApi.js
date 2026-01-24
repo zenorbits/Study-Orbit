@@ -38,10 +38,16 @@ export const batchApi = createApi({
             })
         }),
         joinBatch: build.mutation({
-            query: (batchCode) => ({
+            query: ({ batchId, batchCode }) => ({
                 url: '/joinbatch',
                 method: 'POST',
-                body: { batchCode }
+                body: { batchId, batchCode }
+            })
+        }),
+        fetchJoinedBatch:build.query({
+            query:()=>({
+                url:'/joinedbatches',
+                method:'GET'
             })
         })
     })
@@ -49,4 +55,4 @@ export const batchApi = createApi({
 })
 
 
-export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery, useJoinBatchMutation } = batchApi
+export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery, useJoinBatchMutation,useFetchJoinedBatchQuery } = batchApi

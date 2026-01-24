@@ -92,50 +92,85 @@ const updateBatchStatus = async (req, res) => {
 
 const fetchVerifiedBatch = async (req, res) => {
     try {
-        const batches = await batchModel.find({ status: 'verified' });
+        const studentId = req.user?._id || req.user?.id;
+
+        if (!studentId) {
+            return res.status(401).json({ success: false, message: "Unauthorized: no student ID" });
+        }
+
+        // Find verified batches where studentId is NOT in the students array
+        const batches = await batchModel.find({
+            status: "verified",
+            students: { $ne: studentId }
+        });
 
         if (!batches || batches.length === 0) {
             return res.status(200).json({
                 success: false,
-                message: "No verified batches found",
+                message: "No unjoined verified batches found",
                 batches: []
             });
         }
 
         res.status(200).json({
             success: true,
-            message: "Fetched Verified Batch Successfully",
+            message: "Fetched unjoined verified batches successfully",
             batches
         });
     } catch (error) {
         res.status(500).json({
             success: false,
             message: "Error fetching batches",
-            error: error.message,
+            error: error.message
         });
     }
 };
-
 const joinBatch = async (req, res) => {
     try {
-        const { batchCode } = req.body;
-        const studentId = req.user.id;
+        const { batchId, batchCode } = req.body;
+        const studentId = req.user?._id || req.user?.id;
 
-        const batch = await batchModel.findOne({ code: batchCode, status: 'verified' });
+        if (!batchId || !batchCode) {
+            return res.status(400).json({ success: false, message: "Batch ID and code are required" });
+        }
+
+        const batch = await batchModel.findOne({ _id: batchId, code: batchCode, status: "verified" });
         if (!batch) {
-            return res.status(404).json({ success: false, message: "Invalid or unverified batch code" });
+            return res.status(404).json({ success: false, message: "Invalid or unverified batch code for this batch" });
         }
 
-        if (!batch.students.some(s => s.equals(studentId))) {
-            batch.students.push(studentId);
-            await batch.save();
+        const alreadyJoined = batch.students.some(s => s && s.equals(studentId));
+        if (alreadyJoined) {
+            return res.status(200).json({ success: false, message: "You have already joined this batch", batch });
         }
 
-        const updatedBatch = await batchModel.findById(batch._id).populate('students', 'name email');
-        res.status(200).json({ success: true, message: "Joined batch successfully", batch: updatedBatch });
+        batch.students.push(studentId);
+        await batch.save();
+
+        const updatedBatch = await batchModel.findById(batch._id).populate("students", "username email");
+        return res.status(200).json({ success: true, message: "Joined batch successfully", batch: updatedBatch });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Error joining batch", error: error.message });
+        console.error("Join batch error:", error);
+        return res.status(500).json({ success: false, message: "Error joining batch", error: error.message });
     }
 };
 
-module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus, fetchVerifiedBatch, joinBatch };
+const fetchJoinedBatch = async (req, res) => {
+    try {
+        const studentId = req.user?._id || req.user?.id;
+
+        if (!studentId) {
+            return res.status(401).json({ message: 'Unauthorized: no student ID' })
+        }
+
+        const joinedBatch = await batchModel.find({ students: studentId, status: 'verified' });
+
+        res.status(200).json({ success: true, batches: joinedBatch });
+    } catch (error) {
+        console.error("Fetch joined batches error:", error);
+        res.status(500).json({ success: false, message: "Error fetching joined batches", error: error.message });
+
+    }
+}
+
+module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus, fetchVerifiedBatch, joinBatch, fetchJoinedBatch };

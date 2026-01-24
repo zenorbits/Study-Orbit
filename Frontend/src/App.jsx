@@ -18,6 +18,7 @@ import PendingBatchPages from './admin/Batch(Admin)/PendingBatchPages';
 import StudentPage from './student/StudentPage';
 import StudentMainBody from './student/StudentMainBody';
 import BrowseBatch from './student/batch(Student)/BrowseBatch';
+import Mybatches from './student/batch(Student)/Mybatches';
 
 const App = () => {
   return (
@@ -48,6 +49,7 @@ const App = () => {
          <Route path='/student/*' element={<ProtectedRoutes allowedRoles={['student']}><StudentPage/></ProtectedRoutes>}>
           <Route index element={<StudentMainBody />} />
           <Route path='join-batch' element={<BrowseBatch />} />
+          <Route path='batches' element={<Mybatches />} />
         </Route>
       </Routes>
       <ToastContainer position="top-right" autoClose={2500} />
