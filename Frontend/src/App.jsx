@@ -50,6 +50,7 @@ const App = () => {
           <Route index element={<StudentMainBody />} />
           <Route path='join-batch' element={<BrowseBatch />} />
           <Route path='batches' element={<Mybatches />} />
+          <Route path='batch' element={<AllTeacherBatch />} />
         </Route>
       </Routes>
       <ToastContainer position="top-right" autoClose={2500} />

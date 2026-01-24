@@ -1,4 +1,5 @@
 const batchModel = require('../models/batch.model');
+const mongoose = require("mongoose");
 
 const createBatch = async (req, res) => {
     try {
@@ -70,7 +71,7 @@ const fetchPendingBatch = async (req, res) => {
     }
 };
 
-// controllers/batchController.js
+
 const updateBatchStatus = async (req, res) => {
     try {
         const { id } = req.params;
@@ -173,4 +174,37 @@ const fetchJoinedBatch = async (req, res) => {
     }
 }
 
-module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus, fetchVerifiedBatch, joinBatch, fetchJoinedBatch };
+// DELETE /batches/:id
+const deleteBatch = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Ensure user is authenticated
+        if (!req.user) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
+
+        // Role check
+        if (req.user.role !== "admin" && req.user.role !== "teacher") {
+            return res.status(403).json({ success: false, message: "Not authorized to delete batches" });
+        }
+
+        // Validate ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, message: "Invalid batch ID" });
+        }
+
+        const batch = await batchModel.findByIdAndDelete(id);
+
+        if (!batch) {
+            return res.status(404).json({ success: false, message: "Batch not found" });
+        }
+
+        res.status(200).json({ success: true, message: "Batch deleted successfully", batch });
+    } catch (error) {
+        console.error("DeleteBatch error:", error); // 👈 log exact error
+        res.status(500).json({ success: false, message: "Error deleting batch", error: error.message });
+    }
+};
+
+module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus, fetchVerifiedBatch, joinBatch, fetchJoinedBatch, deleteBatch };

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetBatchForTeacherQuery } from "../../redux/api/batchApi";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
+import { useGetBatchForTeacherQuery, useDeleteBatchMutation } from "../../redux/api/batchApi";
+
 const AllTeacherBatch = () => {
   const theme = useSelector((state) => state.toggleTheme.value);
 
@@ -9,12 +9,25 @@ const AllTeacherBatch = () => {
     pollingInterval: 30000,
   });
 
-  const batches = data?.batches || []; // safe fallback
+  const [deleteBatch] = useDeleteBatchMutation();
+  const batches = data?.batches || [];
 
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
 
   const toggleMenu = (index) => {
     setOpenMenuIndex(openMenuIndex === index ? null : index);
+  };
+
+  const handleDelete = async (batchId) => {
+    if (window.confirm("Are you sure you want to delete this batch?")) {
+      try {
+        await deleteBatch(batchId).unwrap();
+        alert("Batch deleted successfully!");
+        refetch(); // refresh list after deletion
+      } catch (err) {
+        alert("Error deleting batch");
+      }
+    }
   };
 
   const getStatusColor = (status) =>
@@ -69,17 +82,16 @@ const AllTeacherBatch = () => {
         ) : (
           batches.map((batch, index) => (
             <div
-              key={index}
+              key={batch._id}
               className="relative h-40 rounded-lg 
                 bg-white/40 dark:bg-black/40 backdrop-blur-md 
                 border border-sky-200 dark:border-emerald-600 
                 shadow-md hover:shadow-xl 
                 flex flex-col items-start justify-center px-4
                 text-sky-900 dark:text-emerald-200 
-                 hover:brightness-110 
+                hover:brightness-110 
                 transition-transform duration-300"
             >
-              {/* Three-dot menu button */}
               {/* Three-dot menu button */}
               <button
                 onClick={() => toggleMenu(index)}
@@ -103,7 +115,7 @@ const AllTeacherBatch = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => console.log("Delete", batch)}
+                    onClick={() => handleDelete(batch._id)}
                     className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Delete

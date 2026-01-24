@@ -44,10 +44,16 @@ export const batchApi = createApi({
                 body: { batchId, batchCode }
             })
         }),
-        fetchJoinedBatch:build.query({
-            query:()=>({
-                url:'/joinedbatches',
-                method:'GET'
+        fetchJoinedBatch: build.query({
+            query: () => ({
+                url: '/joinedbatches',
+                method: 'GET'
+            })
+        }),
+        deleteBatch: build.mutation({
+            query: (id) => ({
+                url: `/deletebatch/${id}`,
+                method: 'DELETE'
             })
         })
     })
@@ -55,4 +61,4 @@ export const batchApi = createApi({
 })
 
 
-export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery, useJoinBatchMutation,useFetchJoinedBatchQuery } = batchApi
+export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery, useJoinBatchMutation, useFetchJoinedBatchQuery, useDeleteBatchMutation } = batchApi

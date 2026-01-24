@@ -100,7 +100,7 @@ const StudentNavbar = () => {
           Courses
         </Link>
         <Link
-          to="/student/batch"
+          to="/student/batches"
           className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition"
         >
           My Batch

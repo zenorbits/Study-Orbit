@@ -5,7 +5,6 @@ import {
   ClipboardDocumentListIcon,
   CheckCircleIcon,
   MegaphoneIcon,
-  UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import { useGetPendingBatchQuery } from "../redux/api/batchApi";
 import { Link } from "react-router-dom";
@@ -145,18 +144,19 @@ const AdminMainBody = () => {
             <p className="text-sm opacity-80">Approve or reject pending requests</p>
           </Link>
 
+          {/* New Batches Quick Action */}
           <Link
-            to="/admin/profile"
+            to="/admin/batch"
             className="flex flex-col items-start gap-2 px-6 py-4 rounded-lg 
               bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 
               font-semibold shadow-md border border-indigo-400 hover:shadow-indigo-300 
               hover:bg-gray-100 dark:hover:bg-gray-700 transition"
           >
             <div className="flex items-center gap-3">
-              <UserCircleIcon className="w-5 h-5 text-indigo-400" />
-              <span>My Profile</span>
+              <ClipboardDocumentListIcon className="w-5 h-5 text-indigo-400" />
+              <span>Batches</span>
             </div>
-            <p className="text-sm opacity-80">View and edit your profile</p>
+            <p className="text-sm opacity-80">View all batches in the system</p>
           </Link>
         </div>
       </div>

@@ -11,5 +11,6 @@ router.patch('/:id/status', middleware.authMiddleware, middleware.requiredRole([
 router.get('/verifiedbatches', middleware.authMiddleware, batchController.fetchVerifiedBatch);
 router.post('/joinbatch', middleware.authMiddleware, batchController.joinBatch);
 router.get('/joinedbatches', middleware.authMiddleware, batchController.fetchJoinedBatch);
+router.delete('/deletebatch/:id',middleware.authMiddleware,batchController.deleteBatch);
 
 module.exports = router;
