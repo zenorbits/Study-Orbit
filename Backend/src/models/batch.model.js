@@ -7,12 +7,12 @@ const batchSchema = new mongoose.Schema({
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', 
+        ref: 'User',
         required: true
     },
     status: {
         type: String,
-        enum: ['pending', 'approved', 'rejected'],
+        enum: ['pending', 'verified', 'rejected'],
         default: 'pending'
     },
     description: {
@@ -22,13 +22,17 @@ const batchSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    code:{
-        type:String,
-        unique:true,
-        required:true
-    }
-
-    
+    code: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    students: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 });
 
 const batchModel = mongoose.model('Batch', batchSchema);

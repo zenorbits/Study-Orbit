@@ -33,13 +33,20 @@ export const batchApi = createApi({
         }),
         getVerifiedBatch: build.query({
             query: () => ({
-               url: '/verifiedbatches',
-               method:'GET'
-})
+                url: '/verifiedbatches',
+                method: 'GET'
+            })
+        }),
+        joinBatch: build.mutation({
+            query: (batchCode) => ({
+                url: '/joinbatch',
+                method: 'POST',
+                body: { batchCode }
+            })
         })
     })
 
 })
 
 
-export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery } = batchApi
+export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery, useJoinBatchMutation } = batchApi

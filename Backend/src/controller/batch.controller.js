@@ -116,4 +116,26 @@ const fetchVerifiedBatch = async (req, res) => {
     }
 };
 
-module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus,fetchVerifiedBatch };
+const joinBatch = async (req, res) => {
+    try {
+        const { batchCode } = req.body;
+        const studentId = req.user.id;
+
+        const batch = await batchModel.findOne({ code: batchCode, status: 'verified' });
+        if (!batch) {
+            return res.status(404).json({ success: false, message: "Invalid or unverified batch code" });
+        }
+
+        if (!batch.students.some(s => s.equals(studentId))) {
+            batch.students.push(studentId);
+            await batch.save();
+        }
+
+        const updatedBatch = await batchModel.findById(batch._id).populate('students', 'name email');
+        res.status(200).json({ success: true, message: "Joined batch successfully", batch: updatedBatch });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error joining batch", error: error.message });
+    }
+};
+
+module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus, fetchVerifiedBatch, joinBatch };
