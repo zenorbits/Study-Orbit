@@ -3,7 +3,8 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const authRouter = require('./routes/auth.routes');
-const batchRouter = require('./routes/batch.routes')
+const batchRouter = require('./routes/batch.routes');
+const fetchUserRouter = require('./routes/fetchuser.routes');
 
 
 dotenv.config();
@@ -33,5 +34,8 @@ app.use('/api/auth', authRouter);
 
 //batch routes
 app.use('/api/batch',batchRouter);
+
+//user routes
+app.use('/api/user',fetchUserRouter);
 
 module.exports = app;
