@@ -105,20 +105,19 @@ const fetchVerifiedBatch = async (req, res) => {
             students: { $ne: studentId }
         });
 
-        if (!batches || batches.length === 0) {
-            return res.status(200).json({
-                success: false,
-                message: "No unjoined verified batches found",
-                batches: []
-            });
-        }
+        const batchCount = await batchModel.countDocuments({ status: "verified" });
 
         res.status(200).json({
             success: true,
-            message: "Fetched unjoined verified batches successfully",
-            batches
+            message: batches.length > 0
+                ? "Fetched unjoined verified batches successfully"
+                : "No unjoined verified batches found",
+            batches,
+            count: batches.length,
+            totalVerified: batchCount
         });
     } catch (error) {
+        console.error("Fetch verified batches error:", error);
         res.status(500).json({
             success: false,
             message: "Error fetching batches",
@@ -126,6 +125,7 @@ const fetchVerifiedBatch = async (req, res) => {
         });
     }
 };
+
 const joinBatch = async (req, res) => {
     try {
         const { batchId, batchCode } = req.body;

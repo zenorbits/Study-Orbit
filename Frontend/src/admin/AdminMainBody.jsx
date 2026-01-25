@@ -6,11 +6,12 @@ import {
   CheckCircleIcon,
   MegaphoneIcon,
 } from "@heroicons/react/24/solid";
-import { useGetPendingBatchQuery } from "../redux/api/batchApi";
+import { useGetPendingBatchQuery, useGetVerifiedBatchQuery } from "../redux/api/batchApi";
 import { Link } from "react-router-dom";
 
 const AdminMainBody = () => {
-  const { data: pendingBatchData, isLoading } = useGetPendingBatchQuery();
+  const { data: pendingBatchData, isLoading: isPendingLoading, refetch: refetchPendingBatchData, isError: isPendingError } = useGetPendingBatchQuery();
+  const { data: activeBatchData, isLoading: isVerifiedLoading, refetch: refetchVerifiedBatchData, isError: isVerifiedError } = useGetVerifiedBatchQuery();
 
   const stats = [
     {
@@ -27,13 +28,21 @@ const AdminMainBody = () => {
     },
     {
       title: "Active Batches",
-      value: 8,
+      value: isVerifiedLoading
+        ? "Loading..."
+        : isVerifiedError
+          ? "Error"
+          : activeBatchData?.batches?.length ?? 0,
       color: "border-purple-400",
       icon: <ClipboardDocumentListIcon className="w-6 h-6 text-purple-400" />,
     },
     {
       title: "Pending Verifications",
-      value: isLoading ? "Loading..." : pendingBatchData?.count ?? 0,
+      value: isPendingLoading
+        ? "Loading..."
+        : isPendingError
+          ? "Error"
+          : pendingBatchData?.count ?? 0,
       color: "border-yellow-400",
       icon: <CheckCircleIcon className="w-6 h-6 text-yellow-400" />,
     },
