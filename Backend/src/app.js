@@ -11,11 +11,11 @@ dotenv.config();
 const app = express();
 
 // Middleware
-const allowedOrigins = [process.env.CLIENT_URL, "https://your-production-domain.com"];
+const allowedOrigins = [process.env.CLIENT_URL, "https://study-orbit-frontend.onrender.com/"];
 
 app.use(cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true
 }));
 app.use(express.json());
@@ -33,9 +33,9 @@ app.get("/", (req, res) => {
 app.use('/api/auth', authRouter);
 
 //batch routes
-app.use('/api/batch',batchRouter);
+app.use('/api/batch', batchRouter);
 
 //user routes
-app.use('/api/user',fetchUserRouter);
+app.use('/api/user', fetchUserRouter);
 
 module.exports = app;
