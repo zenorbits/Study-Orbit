@@ -11,20 +11,10 @@ dotenv.config();
 const app = express();
 
 // Middleware
-const allowedOrigins = [
-    process.env.CLIENT_URL,              // from your Render env
-    "https://study-orbit-frontend.onrender.com", // deployed frontend
-    "http://localhost:5173"              // local dev
-];
+const allowedOrigins = [process.env.CLIENT_URL, "https://study-orbit-frontend.onrender.com"];
 
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true
 }));
