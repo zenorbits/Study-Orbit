@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const batchApi = createApi({
     reducerPath: 'batchApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/batch', credentials: 'include' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://study-orbit-backend.onrender.com/api/batch', credentials: 'include' }),
     endpoints: (build) => ({
         batchCreation: build.mutation({
             query: (info) => ({

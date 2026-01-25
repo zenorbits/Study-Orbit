@@ -8,21 +8,31 @@ import {
 } from "@heroicons/react/24/solid";
 import { useGetPendingBatchQuery, useGetVerifiedBatchQuery } from "../redux/api/batchApi";
 import { Link } from "react-router-dom";
+import { useFetchStudentCountQuery, useFetchTeacherQuery } from "../redux/api/userApi";
 
 const AdminMainBody = () => {
   const { data: pendingBatchData, isLoading: isPendingLoading, refetch: refetchPendingBatchData, isError: isPendingError } = useGetPendingBatchQuery();
   const { data: activeBatchData, isLoading: isVerifiedLoading, refetch: refetchVerifiedBatchData, isError: isVerifiedError } = useGetVerifiedBatchQuery();
-
+  const { data: fetchTotalStudents, isLoading: isTotalStudent, refetch: refetchStudentCount, isError: isStudentCountError } = useFetchStudentCountQuery();
+  const { data: fetchTotalTeachers, isLoading: isTotalTeacher, refetch: refetchTeacherCount, isError: isTeacherError } = useFetchTeacherQuery();
   const stats = [
     {
       title: "Total Teachers",
-      value: 12,
+      value: isTotalTeacher
+        ? "Loading..."
+        : isTeacherError
+          ? "Error"
+          : fetchTotalTeachers?.teacherCount ?? 0,
       color: "border-sky-400",
       icon: <UserGroupIcon className="w-6 h-6 text-sky-400" />,
     },
     {
       title: "Total Students",
-      value: 250,
+      value: isTotalStudent
+        ? "Loading..."
+        : isStudentCountError
+          ? "Error"
+          : fetchTotalStudents?.studentCount ?? 0,
       color: "border-emerald-400",
       icon: <AcademicCapIcon className="w-6 h-6 text-emerald-400" />,
     },
