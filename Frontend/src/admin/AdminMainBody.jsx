@@ -104,7 +104,7 @@ const AdminMainBody = () => {
               <UserGroupIcon className="w-5 h-5 text-sky-400" />
               <span>Manage Teachers</span>
             </div>
-            <p className="text-sm opacity-80">Add, edit, or remove teacher accounts</p>
+            <p className="text-sm opacity-80">Edit, or remove teacher accounts</p>
           </Link>
 
           <Link

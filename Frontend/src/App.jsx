@@ -14,11 +14,11 @@ import ManageBatch from './teacher/batch(Teacher)/ManageBatch';
 import AllTeacherBatch from './teacher/batch(Teacher)/AllTeacherBatch';
 import AdminMainBody from './admin/AdminMainBody';
 import PendingBatchPages from './admin/Batch(Admin)/PendingBatchPages';
-
 import StudentPage from './student/StudentPage';
 import StudentMainBody from './student/StudentMainBody';
 import BrowseBatch from './student/batch(Student)/BrowseBatch';
 import Mybatches from './student/batch(Student)/Mybatches';
+import ManageTeacher from './admin/ManageTeacher';
 
 const App = () => {
   return (
@@ -45,6 +45,7 @@ const App = () => {
           <Route path='managebatch' element={<ManageBatch />} />
           <Route path='createbatch' element={<TeacherBatchCreation />} />
           <Route path='batch' element={<AllTeacherBatch />} />
+          <Route path='teachers' element={<ManageTeacher />} />
         </Route>
         <Route path='/student/*' element={<ProtectedRoutes allowedRoles={['student']}><StudentPage /></ProtectedRoutes>}>
           <Route index element={<StudentMainBody />} />
