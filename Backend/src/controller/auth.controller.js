@@ -4,10 +4,12 @@ const userModel = require('../models/user.model');
 
 // Register
 const registerUser = async (req, res) => {
-  const { username, email, password, secretKey } = req.body;
+  const { username, email, phoneNumber, password, secretKey } = req.body;
 
   try {
-    const userExists = await userModel.findOne({ email });
+    const userExists = await userModel.findOne({
+      $or: [{ email }, { phoneNumber }]
+    });
     if (userExists) {
       return res.status(400).json({ message: 'User already Exists' });
     }
@@ -15,43 +17,37 @@ const registerUser = async (req, res) => {
     let setRole = '';
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (secretKey === process.env.ADMIN_SECRETKEY) {
-      setRole = 'admin';
-    } else if (secretKey === process.env.TEACHER_SECRETKEY) {
-      setRole = 'teacher';
-    } else if (secretKey === process.env.STUDENT_SECRETKEY) {
-      setRole = 'student';
-    } else if (secretKey === process.env.PARENT_SECRETKEY) {
-      setRole = 'parent';
-    } else {
-      return res.status(400).json({ message: 'Invalid Credentials' });
-    }
+    if (secretKey === process.env.ADMIN_SECRETKEY) setRole = 'admin';
+    else if (secretKey === process.env.TEACHER_SECRETKEY) setRole = 'teacher';
+    else if (secretKey === process.env.STUDENT_SECRETKEY) setRole = 'student';
+    else if (secretKey === process.env.PARENT_SECRETKEY) setRole = 'parent';
+    else return res.status(400).json({ message: 'Invalid Credentials' });
 
     const user = await userModel.create({
       username,
       email,
+      phoneNumber,
       password: hashedPassword,
       role: setRole
     });
 
     const token = jwt.sign(
-      { id: user._id, username: user.username, email: user.email, role: user.role },
+      { id: user._id, username: user.username, email: user.email, phoneNumber: user.phoneNumber, role: user.role },
       process.env.JWT_SECRETKEY,
       { expiresIn: '3h' }
     );
 
-    // ✅ Updated cookie settings
     res.cookie('token', token, {
       httpOnly: true,
-      secure: true,       // required for HTTPS
-      sameSite: 'None',   // required for cross-origin
+      secure: true,
+      sameSite: 'None',
       maxAge: 3 * 60 * 60 * 1000
     });
 
     return res.status(201).json({
       message: 'User Registered Successfully',
       token,
-      user: { id: user._id, username: user.username, email: user.email, role: user.role }
+      user: { id: user._id, username: user.username, email: user.email, phoneNumber: user.phoneNumber, role: user.role }
     });
   } catch (error) {
     console.error(error);
@@ -61,10 +57,12 @@ const registerUser = async (req, res) => {
 
 // Login
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { emailOrphoneNumber, password } = req.body;
 
   try {
-    const user = await userModel.findOne({ email });
+    const user = await userModel.findOne({
+      $or: [{ email: emailOrphoneNumber }, { phoneNumber: emailOrphoneNumber }]
+    });
     if (!user) {
       return res.status(404).json({ message: 'User does not exist' });
     }
@@ -75,12 +73,11 @@ const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      { id: user._id, username: user.username, email: user.email, phoneNumber: user.phoneNumber, role: user.role },
       process.env.JWT_SECRETKEY,
       { expiresIn: '3h' }
     );
 
-    // ✅ Updated cookie settings
     res.cookie('token', token, {
       httpOnly: true,
       secure: true,
@@ -91,7 +88,7 @@ const loginUser = async (req, res) => {
     res.status(200).json({
       message: 'User Logged in successfully',
       token,
-      user: { id: user._id, username: user.username, email: user.email, role: user.role }
+      user: { id: user._id, username: user.username, email: user.email, phoneNumber: user.phoneNumber, role: user.role }
     });
   } catch (error) {
     console.log(error);
@@ -101,7 +98,6 @@ const loginUser = async (req, res) => {
 
 // Logout
 const userLogout = async (req, res) => {
-  // ✅ Updated cookie clearing
   res.clearCookie('token', {
     httpOnly: true,
     secure: true,

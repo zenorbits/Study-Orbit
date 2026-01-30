@@ -13,7 +13,7 @@ const LoginPage = () => {
   const [loginMutation, { isLoading }] = useUserLoginMutation();
 
   const [formData, setFormData] = useState({
-    email: '',
+    emailOrphoneNumber: '',
     password: ''
   });
 
@@ -28,41 +28,38 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { email, password } = formData;
+    const { emailOrphoneNumber, password } = formData;
 
-    if (!email || !password) {
+    if (!emailOrphoneNumber || !password) {
       toast.error('Please fill in all required credentials ❌');
       return;
     }
 
     try {
-      const response = await loginMutation({ email, password });
+      const response = await loginMutation({ emailOrphoneNumber, password });
       console.log(response);
 
       if (response?.data) {
         const { user, token } = response.data;
 
-        // ✅ Save credentials in Redux + localStorage
+        // ✅ Save credentials in Redux
         dispatch(setCredentials({
           username: user.username,
           email: user.email,
+          phoneNumber: user.phoneNumber,
           role: user.role.toLowerCase(),
           token
         }));
 
         toast.success('Login successful 🎉');
-        setFormData({ email: '', password: '' });
-       if(user.role === 'admin' ){
-        navigate('/admin');
-       }else if(user.role === 'teacher'){
-        navigate('/teacher')
-       } else if(user.role === 'parent'){
-        navigate('/parent')
-       }else if(user.role === 'student'){
-        navigate('/student')
-       }else{
-        navigate('/unauthorized')
-       }
+        setFormData({ emailOrphoneNumber: '', password: '' });
+
+        // ✅ Role-based navigation
+        if (user.role === 'admin') navigate('/admin');
+        else if (user.role === 'teacher') navigate('/teacher');
+        else if (user.role === 'parent') navigate('/parent');
+        else if (user.role === 'student') navigate('/student');
+        else navigate('/unauthorized');
       } else if (response?.error) {
         toast.error(response.error.data?.message || 'Login failed ❌');
       }
@@ -91,22 +88,26 @@ const LoginPage = () => {
           Login
         </h2>
         <form className="space-y-4 sm:space-y-5" onSubmit={handleSubmit}>
-          {/* Email */}
+          {/* Email or Phone */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Email</label>
+            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
+              Email or Phone Number
+            </label>
             <input
-              type="email"
-              name="email"
-              value={formData.email}
+              type="text"
+              name="emailOrphoneNumber"
+              value={formData.emailOrphoneNumber}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder="Enter your email or phone number"
               className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-white/30 rounded-lg bg-white dark:bg-white/10 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Password</label>
+            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
+              Password
+            </label>
             <input
               type="password"
               name="password"

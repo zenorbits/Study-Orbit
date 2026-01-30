@@ -24,6 +24,7 @@ const RegisterPage = () => {
     username: '',
     email: '',
     password: '',
+    phoneNumber: '',   // ✅ renamed to match backend
     specialKey: ''
   });
 
@@ -38,10 +39,10 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { username, email, password, specialKey } = formData;
+    const { username, email, password, phoneNumber, specialKey } = formData;
 
     // ✅ Validation check
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !phoneNumber) {
       toast.error('Please fill in all required credentials ❌');
       return;
     }
@@ -51,6 +52,7 @@ const RegisterPage = () => {
         username,
         email,
         password,
+        phoneNumber,       // ✅ send phoneNumber
         secretKey: specialKey
       });
 
@@ -62,12 +64,13 @@ const RegisterPage = () => {
         dispatch(setCredentials({
           username: user.username,
           email: user.email,
+          phoneNumber: user.phoneNumber,  // ✅ store phoneNumber
           role: user.role,
           token
         }));
 
         toast.success('Registration successful 🎉');
-        setFormData({ username: '', email: '', password: '', specialKey: '' });
+        setFormData({ username: '', email: '', password: '', phoneNumber: '', specialKey: '' });
         navigate('/login'); // redirect after success
       } else if (response?.error) {
         toast.error(response.error.data?.message || 'Registration failed ❌');
@@ -110,6 +113,19 @@ const RegisterPage = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
+              className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-white/30 rounded-lg bg-white dark:bg-white/10 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400"
+            />
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">Phone Number</label>
+            <input
+              type="tel"
+              name="phoneNumber"   // ✅ match backend
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              placeholder="Enter your phone number"
               className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-white/30 rounded-lg bg-white dark:bg-white/10 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400"
             />
           </div>
