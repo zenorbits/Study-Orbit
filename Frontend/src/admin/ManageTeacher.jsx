@@ -11,9 +11,6 @@ const ManageTeacher = () => {
     const { data, isLoading, isError } = useFetchTeacherQuery();
     const teachers = data?.teachers || [];
 
-    useEffect(() => {
-        console.log(teachers);
-    }, [teachers]);
 
     if (isLoading) {
         return (
