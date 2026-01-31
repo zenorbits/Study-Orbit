@@ -71,7 +71,7 @@ const ManageTeacher = () => {
         return (
             teacher.username?.toLowerCase().includes(search) ||
             teacher.email?.toLowerCase().includes(search) ||
-            teacher.phone?.toLowerCase().includes(search)
+            teacher.phoneNumber?.toLowerCase().includes(search)
         );
     });
 
@@ -99,11 +99,9 @@ const ManageTeacher = () => {
                     }}
                     className="w-full sm:w-1/3 px-3 py-2 rounded-lg bg-white text-gray-900 border border-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:bg-gray-800 dark:text-emerald-200 dark:border-emerald-600"
                 />
-                <button className="w-full sm:w-auto bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700">
-                    + Add Teacher
-                </button>
             </div>
 
+            {/* Teacher Table */}
             {/* Teacher Table */}
             <div className="bg-white/40 dark:bg-black/40 backdrop-blur-md border border-sky-200 dark:border-emerald-600 shadow-md rounded-lg overflow-x-auto w-full sm:w-11/12 md:w-4/5 mx-auto">
                 <table className="min-w-full border-collapse text-sm sm:text-base">
@@ -124,25 +122,36 @@ const ManageTeacher = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredTeachers.map((teacher) => (
-                            <tr
-                                key={teacher._id}
-                                className="border-t border-sky-200 dark:border-emerald-600 hover:bg-sky-50 dark:hover:bg-gray-700 transition"
-                            >
-                                <td className="px-4 sm:px-6 py-4 text-sky-900 dark:text-emerald-200">
-                                    {teacher.username}
-                                </td>
-                                <td className="px-4 sm:px-6 py-4 text-gray-700 dark:text-gray-300">
-                                    {teacher.email}
-                                </td>
-                                <td className="px-4 sm:px-6 py-4 text-gray-700 dark:text-gray-300">
-                                    {teacher.phone || "N/A"}
-                                </td>
-                                <td className="px-4 sm:px-6 py-4">
-                                    <button className="text-red-600 hover:underline">Delete</button>
+                        {filteredTeachers.length === 0 ? (
+                            <tr>
+                                <td
+                                    colSpan="4"
+                                    className="px-4 sm:px-6 py-6 text-center text-gray-600 dark:text-gray-300"
+                                >
+                                    No teachers found
                                 </td>
                             </tr>
-                        ))}
+                        ) : (
+                            filteredTeachers.map((teacher) => (
+                                <tr
+                                    key={teacher._id}
+                                    className="border-t border-sky-200 dark:border-emerald-600 hover:bg-sky-50 dark:hover:bg-gray-700 transition"
+                                >
+                                    <td className="px-4 sm:px-6 py-4 text-sky-900 dark:text-emerald-200">
+                                        {teacher.username}
+                                    </td>
+                                    <td className="px-4 sm:px-6 py-4 text-gray-700 dark:text-gray-300">
+                                        {teacher.email}
+                                    </td>
+                                    <td className="px-4 sm:px-6 py-4 text-gray-700 dark:text-gray-300">
+                                        {teacher.phoneNumber || "N/A"}
+                                    </td>
+                                    <td className="px-4 sm:px-6 py-4">
+                                        <button className="text-red-600 hover:underline">Delete</button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
