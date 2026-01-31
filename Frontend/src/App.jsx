@@ -19,6 +19,7 @@ import StudentMainBody from './student/StudentMainBody';
 import BrowseBatch from './student/batch(Student)/BrowseBatch';
 import Mybatches from './student/batch(Student)/Mybatches';
 import ManageTeacher from './admin/ManageTeacher';
+import ProfilePage from './components/ProfilePage';
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
           <Route path='createbatch' element={<TeacherBatchCreation />} />
           <Route path='managebatch' element={<ManageBatch />} />
           <Route path='batch' element={<AllTeacherBatch />} />
+          <Route path='profile' element={<ProfilePage />} />
         </Route>
         <Route path='/admin/*' element={<ProtectedRoutes allowedRoles={['admin']}><AdminPage /></ProtectedRoutes>}>
           <Route index element={<AdminMainBody />} />
@@ -46,12 +48,14 @@ const App = () => {
           <Route path='createbatch' element={<TeacherBatchCreation />} />
           <Route path='batch' element={<AllTeacherBatch />} />
           <Route path='teachers' element={<ManageTeacher />} />
+          <Route path='profile' element={<ProfilePage />} />
         </Route>
         <Route path='/student/*' element={<ProtectedRoutes allowedRoles={['student']}><StudentPage /></ProtectedRoutes>}>
           <Route index element={<StudentMainBody />} />
           <Route path='join-batch' element={<BrowseBatch />} />
           <Route path='batches' element={<Mybatches />} />
           <Route path='batch' element={<AllTeacherBatch />} />
+          <Route path='profile' element={<ProfilePage />} />
         </Route>
       </Routes>
       <ToastContainer position="top-right" autoClose={2500} />
