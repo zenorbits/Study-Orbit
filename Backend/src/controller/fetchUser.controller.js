@@ -4,18 +4,9 @@ const fetchStudent = async (req, res) => {
     try {
         const students = await userModel.find({ role: 'student' });
 
-        if (students.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'No students found',
-                studentCount: 0,
-                students: []
-            });
-        }
-
         res.status(200).json({
             success: true,
-            message: 'Students fetched successfully',
+            message: students.length > 0 ? 'Students fetched successfully' : 'No students found',
             students,
             studentCount: students.length
         });
@@ -33,18 +24,9 @@ const fetchTeacher = async (req, res) => {
     try {
         const teachers = await userModel.find({ role: 'teacher' });
 
-        if (teachers.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'No teachers found',
-                teacherCount: 0,
-                teachers: []
-            });
-        }
-
         res.status(200).json({
             success: true,
-            message: 'Teachers fetched successfully',
+            message: teachers.length > 0 ? 'Teachers fetched successfully' : 'No teachers found',
             teachers,
             teacherCount: teachers.length
         });
@@ -58,4 +40,4 @@ const fetchTeacher = async (req, res) => {
     }
 };
 
-module.exports = { fetchStudent,fetchTeacher }
+module.exports = { fetchStudent, fetchTeacher };
