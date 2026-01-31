@@ -61,6 +61,14 @@ const PendingBatchPages = () => {
         Pending Batches
       </h1>
 
+      {/* Refresh button */}
+      <button
+        onClick={refetch}
+        className="mb-6 px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700"
+      >
+        🔄 Refresh Batches
+      </button>
+
       {/* Show message if no batches */}
       {batches.length === 0 ? (
         <p className="text-lg font-semibold text-gray-600 dark:text-gray-300">

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { data, Link, useNavigate } from "react-router-dom";
 import { toggleMode } from "../redux/features/toggleThemeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useUserLogoutMutation } from "../redux/api/authApi";
 import { logout } from "../redux/features/authApiSlice";
+import { useFetchProfileInfoQuery } from "../redux/api/userApi";
 
 const AdminNavbar = () => {
   const theme = useSelector((state) => state.toggleTheme.value);
@@ -11,6 +12,10 @@ const AdminNavbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [logoutMutation] = useUserLogoutMutation();
+  const { data, isError, isLoading, refetch } = useFetchProfileInfoQuery();
+
+  const profileInfo = data?.user;
+
 
   useEffect(() => {
     if (theme === "Dark") {
@@ -115,7 +120,7 @@ const AdminNavbar = () => {
               className={`font-semibold ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"
                 }`}
             >
-              Admin User
+              {profileInfo?.username}
             </span>
           </div>
         </Link>

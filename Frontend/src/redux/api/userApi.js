@@ -16,13 +16,13 @@ export const userApi = createApi({
                 method: 'GET'
             })
         }),
-        fetchUserInfo: build.query({
-            query: (id) => ({
-                url: `/userinfo/${id}`,
+        fetchProfileInfo: build.query({
+            query: () => ({
+                url: '/profileinfo',
                 method: 'GET'
             })
         })
     })
 });
 
-export const { useFetchStudentCountQuery, useFetchTeacherQuery, useFetchUserInfoQuery } = userApi;
+export const { useFetchStudentCountQuery, useFetchTeacherQuery, useFetchProfileInfoQuery } = userApi;
