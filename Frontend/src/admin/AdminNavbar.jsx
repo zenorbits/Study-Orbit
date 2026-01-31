@@ -44,9 +44,8 @@ const AdminNavbar = () => {
         {/* Logo */}
         <Link to="/admin">
           <div
-            className={`font-bold text-2xl tracking-wide ${
-              theme === "Dark" ? "text-emerald-400" : "text-sky-900"
-            }`}
+            className={`font-bold text-2xl tracking-wide ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"
+              }`}
           >
             StudyOrbit
           </div>
@@ -61,19 +60,16 @@ const AdminNavbar = () => {
             className="flex flex-col justify-center items-center w-8 h-8 focus:outline-none group"
           >
             <span
-              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${
-                isOpen ? "rotate-45 translate-y-2" : ""
-              }`}
+              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "rotate-45 translate-y-2" : ""
+                }`}
             />
             <span
-              className={`h-1 w-8 bg-current rounded my-1 transition-opacity duration-300 ${
-                isOpen ? "opacity-0" : "opacity-100"
-              }`}
+              className={`h-1 w-8 bg-current rounded my-1 transition-opacity duration-300 ${isOpen ? "opacity-0" : "opacity-100"
+                }`}
             />
             <span
-              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${
-                isOpen ? "-rotate-45 -translate-y-2" : ""
-              }`}
+              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "-rotate-45 -translate-y-2" : ""
+                }`}
             />
           </button>
         </div>
@@ -112,14 +108,12 @@ const AdminNavbar = () => {
             <img
               src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               alt="Admin Profile"
-              className={`w-10 h-10 rounded-full border-2 shadow-md ${
-                theme === "Dark" ? "border-emerald-400" : "border-sky-500"
-              }`}
+              className={`w-10 h-10 rounded-full border-2 shadow-md ${theme === "Dark" ? "border-emerald-400" : "border-sky-500"
+                }`}
             />
             <span
-              className={`font-semibold ${
-                theme === "Dark" ? "text-emerald-400" : "text-sky-900"
-              }`}
+              className={`font-semibold ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"
+                }`}
             >
               Admin User
             </span>
