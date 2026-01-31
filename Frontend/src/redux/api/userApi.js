@@ -15,8 +15,14 @@ export const userApi = createApi({
                 url: '/teachers',
                 method: 'GET'
             })
+        }),
+        fetchUserInfo: build.query({
+            query: (id) => ({
+                url: `/userinfo/${id}`,
+                method: 'GET'
+            })
         })
     })
 });
 
-export const { useFetchStudentCountQuery,useFetchTeacherQuery } = userApi;
+export const { useFetchStudentCountQuery, useFetchTeacherQuery, useFetchUserInfoQuery } = userApi;

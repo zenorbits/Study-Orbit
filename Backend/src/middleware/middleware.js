@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
-
+const userModel = require('../models/user.model');
 // Authentication middleware
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   try {
     const token =
       req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
-      
+
     if (!token) {
       return res.status(401).json({
         message: 'No token, authorization denied'
@@ -14,7 +14,16 @@ const authMiddleware = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRETKEY);
 
-    req.user = decoded; // attach user payload (id, username, email, role, etc.)
+    const user = await userModel.findById(decoded.id).select('-password');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User Not Found'
+      });
+    }
+
+    req.user = user; // attach user payload (id, username, email, role, etc.)
     next();
   } catch (error) {
     res.clearCookie('token', {
