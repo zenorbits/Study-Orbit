@@ -8,13 +8,20 @@ import {
 } from "@heroicons/react/24/solid";
 import { useDeleteProfileMutation } from "../redux/api/profilesettingApi";
 import { useNavigate } from "react-router-dom";
+import { useUserLogoutMutation } from "../redux/api/authApi";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/features/authApiSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProfilePage = () => {
   const { data, isLoading, isError, refetch } = useFetchProfileInfoQuery();
   const profileInfo = data?.user;
 
+  const [logoutUser] = useUserLogoutMutation();
   const [deleteProfile] = useDeleteProfileMutation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Auto-refetch every 60 seconds
   useEffect(() => {
@@ -24,21 +31,37 @@ const ProfilePage = () => {
     return () => clearInterval(interval);
   }, [refetch]);
 
+  const handleLogout = async () => {
+    try {
+      await logoutUser().unwrap();
+      dispatch(logout());
+      localStorage.removeItem("user");
+      toast.success("Logged out successfully");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    } catch (err) {
+      console.error("Logout failed", err);
+      toast.error("Logout failed");
+    }
+  };
+
   const handleDeleteProfile = async () => {
-    if (window.confirm('Are you sure u want to delete the profile')) {
+    if (window.confirm("Are you sure you want to delete your profile?")) {
       try {
-        await deleteProfile();
-        alert('Profile deleted successfully');
+        await deleteProfile().unwrap();
+        dispatch(logout());
+        localStorage.removeItem("user");
+        toast.success("Profile deleted successfully");
         setTimeout(() => {
-          navigate('/')
-        }, 1500)
+          navigate("/login"); // redirect to login after deletion
+        }, 1500);
       } catch (error) {
-        alert("Error deleting profile");
+        console.error("Delete failed", error);
+        toast.error(error?.data?.message || "Error deleting profile");
       }
     }
-  }
-
-
+  };
 
   const infoBlocks = [
     {
@@ -93,6 +116,9 @@ const ProfilePage = () => {
       bg-gradient-to-br from-white via-blue-100 to-blue-500 
       dark:from-gray-900 dark:via-black dark:to-emerald-900"
     >
+      {/* Toast Container */}
+      <ToastContainer position="top-right" autoClose={2000} />
+
       {/* Profile Header */}
       <div className="flex flex-col items-center mb-12">
         <div className="w-28 h-28 rounded-full bg-sky-600 dark:bg-emerald-600 flex items-center justify-center text-white text-4xl font-bold shadow">
@@ -132,12 +158,16 @@ const ProfilePage = () => {
         <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-yellow-400 hover:shadow-yellow-300 transition">
           🔒 Change Password
         </button>
-        <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-red-400 hover:shadow-red-300 transition">
+        <button
+          onClick={handleLogout}
+          className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-red-400 hover:shadow-red-300 transition"
+        >
           🚪 Logout
         </button>
         <button
           onClick={handleDeleteProfile}
-          className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-indigo-400 hover:shadow-indigo-300 transition">
+          className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-indigo-400 hover:shadow-indigo-300 transition"
+        >
           ❌ Delete Account
         </button>
       </div>
