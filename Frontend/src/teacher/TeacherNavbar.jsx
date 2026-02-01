@@ -4,6 +4,7 @@ import { toggleMode } from "../redux/features/toggleThemeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useUserLogoutMutation } from "../redux/api/authApi";
 import { logout } from "../redux/features/authApiSlice";
+import { useFetchProfileInfoQuery } from "../redux/api/userApi";
 
 const TeacherNavbar = () => {
   const theme = useSelector((state) => state.toggleTheme.value);
@@ -11,6 +12,18 @@ const TeacherNavbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [logoutMutation] = useUserLogoutMutation();
+
+  const { data, isLoading, isError, refetch } = useFetchProfileInfoQuery();
+  const profileInfo = data?.user;
+
+  // Auto-refetch every 60 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 60000); // 60,000 ms = 60 seconds
+
+    return () => clearInterval(interval);
+  }, [refetch]);
 
   useEffect(() => {
     if (theme === "Dark") {
@@ -44,8 +57,7 @@ const TeacherNavbar = () => {
         {/* Logo */}
         <Link to="/teacher">
           <div
-            className={`font-bold text-2xl tracking-wide ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"
-              }`}
+            className={`font-bold text-2xl tracking-wide ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"}`}
           >
             StudyOrbit
           </div>
@@ -60,40 +72,30 @@ const TeacherNavbar = () => {
             className="flex flex-col justify-center items-center w-8 h-8 focus:outline-none group"
           >
             <span
-              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "rotate-45 translate-y-2" : ""
-                }`}
+              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "rotate-45 translate-y-2" : ""}`}
             />
             <span
-              className={`h-1 w-8 bg-current rounded my-1 transition-opacity duration-300 ${isOpen ? "opacity-0" : "opacity-100"
-                }`}
+              className={`h-1 w-8 bg-current rounded my-1 transition-opacity duration-300 ${isOpen ? "opacity-0" : "opacity-100"}`}
             />
             <span
-              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "-rotate-45 -translate-y-2" : ""
-                }`}
+              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "-rotate-45 -translate-y-2" : ""}`}
             />
           </button>
         </div>
       </div>
 
       {/* Links + Profile + Toggle + Logout */}
-      {/* Links + Profile + Toggle + Logout */}
       <div
         className={`flex-col md:flex md:flex-row md:items-center md:gap-12 w-full md:w-auto 
-    transition-all duration-500 ease-in-out
-    ${isOpen ? "flex" : "hidden"} 
-    md:bg-transparent`}
+        transition-all duration-500 ease-in-out
+        ${isOpen ? "flex" : "hidden"} 
+        md:bg-transparent`}
       >
         {/* Navigation Links */}
-        <Link
-          to="/teacher"
-          className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition"
-        >
+        <Link to="/teacher" className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition">
           Home
         </Link>
-        <Link
-          to="/teacher/batch"
-          className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition"
-        >
+        <Link to="/teacher/batch" className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition">
           Batch
         </Link>
 
@@ -101,16 +103,12 @@ const TeacherNavbar = () => {
         <Link to="/teacher/profile">
           <div className="flex items-center gap-3 px-6 md:px-0 py-4 md:py-0 hover:opacity-90 transition">
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwMPjHEmoDlOtA_YduTR5talb_zihtvdEgrA&s"
+              src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               alt="Profile"
-              className={`w-10 h-10 rounded-full border-2 shadow-md ${theme === "Dark" ? "border-emerald-400" : "border-sky-500"
-                }`}
+              className={`w-10 h-10 rounded-full border-2 shadow-md ${theme === "Dark" ? "border-emerald-400" : "border-sky-500"}`}
             />
-            <span
-              className={`font-semibold ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"
-                }`}
-            >
-              Henry Cavill
+            <span className={`font-semibold ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"}`}>
+              {isLoading ? "Loading..." : isError ? "Error" : profileInfo?.username}
             </span>
           </div>
         </Link>
@@ -119,7 +117,7 @@ const TeacherNavbar = () => {
         <button
           onClick={() => dispatch(toggleMode())}
           className={`mt-4 md:mt-0 px-5 py-2 rounded-full font-semibold shadow-md hover:scale-105 hover:shadow-lg transition 
-      ${theme === "Dark" ? "bg-emerald-500 text-white" : "bg-sky-500 text-white"}`}
+          ${theme === "Dark" ? "bg-emerald-500 text-white" : "bg-sky-500 text-white"}`}
         >
           {theme === "Dark" ? "Light Mode ☀️" : "Dark Mode 🌙"}
         </button>
@@ -128,7 +126,7 @@ const TeacherNavbar = () => {
         <button
           onClick={handleLogout}
           className={`mt-4 md:mt-0 px-5 py-2 rounded-full font-semibold shadow-md hover:scale-105 hover:shadow-lg transition 
-      ${theme === "Dark" ? "bg-red-500 text-white" : "bg-red-600 text-white"}`}
+          ${theme === "Dark" ? "bg-red-500 text-white" : "bg-red-600 text-white"}`}
         >
           Logout
         </button>

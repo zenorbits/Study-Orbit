@@ -1,85 +1,121 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useFetchProfileInfoQuery } from "../redux/api/userApi";
+import {
+  EnvelopeIcon,
+  PhoneIcon,
+  IdentificationIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/solid";
 
 const ProfilePage = () => {
-  // Hardcoded user data for now
-  const user = {
-    _id: "1234567890",
-    username: "Sanchit Pathak",
-    email: "sanchit@example.com",
-    phone: "+91 9876543210",
-    role: "Student",
-  };
+  const { data, isLoading, isError, refetch } = useFetchProfileInfoQuery();
+  const profileInfo = data?.user;
+
+  // Auto-refetch every 60 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [refetch]);
+
+  const infoBlocks = [
+    {
+      label: "Email",
+      value: profileInfo?.email,
+      icon: <EnvelopeIcon className="w-6 h-6 text-sky-400" />,
+      border: "border-sky-400",
+    },
+    {
+      label: "Phone",
+      value: profileInfo?.phoneNumber,
+      icon: <PhoneIcon className="w-6 h-6 text-emerald-400" />,
+      border: "border-emerald-400",
+    },
+    {
+      label: "User ID",
+      value: profileInfo?._id,
+      icon: <IdentificationIcon className="w-6 h-6 text-purple-400" />,
+      border: "border-purple-400",
+    },
+    {
+      label: "Role",
+      value: profileInfo?.role?.toUpperCase(),
+      icon: <UserCircleIcon className="w-6 h-6 text-yellow-400" />,
+      border: "border-yellow-400",
+    },
+  ];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+          Loading profile...
+        </p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg font-semibold text-red-600">
+          Failed to load profile info.
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen py-10 px-6 bg-gradient-to-br from-white via-blue-100 to-blue-500 dark:from-gray-900 dark:via-black dark:to-emerald-900">
+    <div
+      className="min-h-screen py-10 px-6 
+      bg-gradient-to-br from-white via-blue-100 to-blue-500 
+      dark:from-gray-900 dark:via-black dark:to-emerald-900"
+    >
       {/* Profile Header */}
       <div className="flex flex-col items-center mb-12">
-        <div className="w-28 h-28 rounded-full bg-sky-600 dark:bg-emerald-600 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
-          {user.username.charAt(0).toUpperCase()}
+        <div className="w-28 h-28 rounded-full bg-sky-600 dark:bg-emerald-600 flex items-center justify-center text-white text-4xl font-bold shadow">
+          {profileInfo?.username?.charAt(0).toUpperCase()}
         </div>
-        <h2 className="mt-4 text-3xl font-extrabold text-sky-900 dark:text-emerald-200">
-          {user.username}
+        <h2 className="mt-4 text-3xl font-bold text-gray-800 dark:text-gray-100">
+          {profileInfo?.username}
         </h2>
-        <p className="text-lg text-gray-700 dark:text-gray-400">{user.role}</p>
+        <p className="text-lg text-gray-600 dark:text-gray-400">
+          {profileInfo?.role?.toUpperCase()}
+        </p>
       </div>
 
       {/* Info Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-        {/* Email */}
-        <div className="p-6 rounded-xl bg-gradient-to-r from-sky-100 to-sky-200 dark:from-gray-700 dark:to-gray-800 shadow-lg active:scale-95 transition-transform cursor-pointer">
-          <div className="flex items-center space-x-3">
-            <span className="text-2xl">📧</span>
-            <div>
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-300">Email</p>
-              <p className="text-base font-bold text-gray-900 dark:text-gray-100">{user.email}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12 w-11/12 md:w-4/5 mx-auto">
+        {infoBlocks.map((block, index) => (
+          <div
+            key={index}
+            className={`rounded-lg shadow-md p-6 bg-white/80 dark:bg-gray-800/80 
+              text-gray-800 dark:text-gray-100 font-semibold border ${block.border} 
+              hover:shadow-lg transition`}
+          >
+            <div className="flex items-center gap-3">
+              {block.icon}
+              <h2 className="text-lg">{block.label}</h2>
             </div>
+            <p className="text-xl mt-2">{block.value}</p>
           </div>
-        </div>
-
-        {/* Phone */}
-        <div className="p-6 rounded-xl bg-gradient-to-r from-green-100 to-green-200 dark:from-gray-700 dark:to-gray-800 shadow-lg active:scale-95 transition-transform cursor-pointer">
-          <div className="flex items-center space-x-3">
-            <span className="text-2xl">📱</span>
-            <div>
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-300">Phone</p>
-              <p className="text-base font-bold text-gray-900 dark:text-gray-100">{user.phone}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* User ID */}
-        <div className="p-6 rounded-xl bg-gradient-to-r from-purple-100 to-purple-200 dark:from-gray-700 dark:to-gray-800 shadow-lg active:scale-95 transition-transform cursor-pointer">
-          <div className="flex items-center space-x-3">
-            <span className="text-2xl">🆔</span>
-            <div>
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-300">User ID</p>
-              <p className="text-base font-bold text-gray-900 dark:text-gray-100">{user._id}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Role */}
-        <div className="p-6 rounded-xl bg-gradient-to-r from-yellow-100 to-yellow-200 dark:from-gray-700 dark:to-gray-800 shadow-lg active:scale-95 transition-transform cursor-pointer">
-          <div className="flex items-center space-x-3">
-            <span className="text-2xl">🎓</span>
-            <div>
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-300">Role</p>
-              <p className="text-base font-bold text-gray-900 dark:text-gray-100">{user.role}</p>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Options */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <button className="py-3 rounded-lg bg-sky-600 text-white font-semibold active:scale-95 transition shadow">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-11/12 md:w-4/5 mx-auto">
+        <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-sky-400 hover:shadow-sky-300 transition">
           ✏️ Edit Profile
         </button>
-        <button className="py-3 rounded-lg bg-yellow-500 text-white font-semibold active:scale-95 transition shadow">
+        <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-yellow-400 hover:shadow-yellow-300 transition">
           🔒 Change Password
         </button>
-        <button className="py-3 rounded-lg bg-red-600 text-white font-semibold active:scale-95 transition shadow">
+        <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-red-400 hover:shadow-red-300 transition">
           🚪 Logout
+        </button>
+        <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-indigo-400 hover:shadow-indigo-300 transition">
+          ❌ Delete Account
         </button>
       </div>
     </div>

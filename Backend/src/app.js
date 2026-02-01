@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const authRouter = require('./routes/auth.routes');
 const batchRouter = require('./routes/batch.routes');
 const fetchUserRouter = require('./routes/fetchuser.routes');
+const profileSettingRouter = require('./routes/profilesetting.routes');
 
 
 dotenv.config();
@@ -36,7 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.get("/", (req, res) => {
-    res.send("API is running ✅");
+  res.send("API is running ✅");
 });
 
 //auth routes
@@ -47,5 +48,9 @@ app.use('/api/batch', batchRouter);
 
 //user routes
 app.use('/api/user', fetchUserRouter);
+
+//profile setting routes
+
+app.use('/api/profile', profileSettingRouter)
 
 module.exports = app;

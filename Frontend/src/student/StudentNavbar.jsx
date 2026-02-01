@@ -4,6 +4,7 @@ import { toggleMode } from "../redux/features/toggleThemeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useUserLogoutMutation } from "../redux/api/authApi";
 import { logout } from "../redux/features/authApiSlice";
+import { useFetchProfileInfoQuery } from "../redux/api/userApi";
 
 const StudentNavbar = () => {
   const theme = useSelector((state) => state.toggleTheme.value);
@@ -11,6 +12,18 @@ const StudentNavbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [logoutMutation] = useUserLogoutMutation();
+
+  const { data, isLoading, isError, refetch } = useFetchProfileInfoQuery();
+  const profileInfo = data?.user;
+
+  // Auto-refetch every 60 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 60000); // 60,000 ms = 60 seconds
+
+    return () => clearInterval(interval); // cleanup on unmount
+  }, [refetch]);
 
   useEffect(() => {
     if (theme === "Dark") {
@@ -41,12 +54,9 @@ const StudentNavbar = () => {
     >
       {/* Top Row: Logo + Hamburger */}
       <div className="flex items-center justify-between h-20">
-        {/* Logo */}
         <Link to="/student">
           <div
-            className={`font-bold text-2xl tracking-wide ${
-              theme === "Dark" ? "text-emerald-400" : "text-sky-900"
-            }`}
+            className={`font-bold text-2xl tracking-wide ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"}`}
           >
             StudyOrbit
           </div>
@@ -61,19 +71,13 @@ const StudentNavbar = () => {
             className="flex flex-col justify-center items-center w-8 h-8 focus:outline-none group"
           >
             <span
-              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${
-                isOpen ? "rotate-45 translate-y-2" : ""
-              }`}
+              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "rotate-45 translate-y-2" : ""}`}
             />
             <span
-              className={`h-1 w-8 bg-current rounded my-1 transition-opacity duration-300 ${
-                isOpen ? "opacity-0" : "opacity-100"
-              }`}
+              className={`h-1 w-8 bg-current rounded my-1 transition-opacity duration-300 ${isOpen ? "opacity-0" : "opacity-100"}`}
             />
             <span
-              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${
-                isOpen ? "-rotate-45 -translate-y-2" : ""
-              }`}
+              className={`h-1 w-8 bg-current rounded transition-transform duration-300 ${isOpen ? "-rotate-45 -translate-y-2" : ""}`}
             />
           </button>
         </div>
@@ -86,29 +90,16 @@ const StudentNavbar = () => {
         ${isOpen ? "flex" : "hidden"} 
         md:bg-transparent`}
       >
-        {/* Navigation Links */}
-        <Link
-          to="/student"
-          className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition"
-        >
+        <Link to="/student" className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition">
           Home
         </Link>
-        <Link
-          to="/student/courses"
-          className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition"
-        >
+        <Link to="/student/courses" className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition">
           Courses
         </Link>
-        <Link
-          to="/student/batches"
-          className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition"
-        >
+        <Link to="/student/batches" className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition">
           My Batch
         </Link>
-        <Link
-          to="/student/assignments"
-          className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition"
-        >
+        <Link to="/student/assignments" className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition">
           Assignments
         </Link>
 
@@ -118,16 +109,10 @@ const StudentNavbar = () => {
             <img
               src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               alt="Student Profile"
-              className={`w-10 h-10 rounded-full border-2 shadow-md ${
-                theme === "Dark" ? "border-emerald-400" : "border-sky-500"
-              }`}
+              className={`w-10 h-10 rounded-full border-2 shadow-md ${theme === "Dark" ? "border-emerald-400" : "border-sky-500"}`}
             />
-            <span
-              className={`font-semibold ${
-                theme === "Dark" ? "text-emerald-400" : "text-sky-900"
-              }`}
-            >
-              Student User
+            <span className={`font-semibold ${theme === "Dark" ? "text-emerald-400" : "text-sky-900"}`}>
+              {isLoading ? "Loading..." : isError ? "Error" : profileInfo?.username}
             </span>
           </div>
         </Link>
