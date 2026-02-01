@@ -6,6 +6,7 @@ import batchReducer from './features/batchSlice'
 import { batchApi } from './api/batchApi'
 import { userApi } from './api/userApi'
 import searchInputReducer from './features/searchInputFilter';
+import { profileSettingApi } from './api/profilesettingApi'
 
 
 export const store = configureStore({
@@ -16,10 +17,11 @@ export const store = configureStore({
         searchFilter: searchInputReducer,
         [authApi.reducerPath]: authApi.reducer,
         [batchApi.reducerPath]: batchApi.reducer,
-        [userApi.reducerPath]: userApi.reducer
+        [userApi.reducerPath]: userApi.reducer,
+        [profileSettingApi.reducerPath]: profileSettingApi.reducer
 
     },
 
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(authApi.middleware, batchApi.middleware, userApi.middleware)
+        getDefaultMiddleware().concat(authApi.middleware, batchApi.middleware, userApi.middleware, profileSettingApi.middleware)
 })

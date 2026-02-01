@@ -6,10 +6,15 @@ import {
   IdentificationIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
+import { useDeleteProfileMutation } from "../redux/api/profilesettingApi";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const { data, isLoading, isError, refetch } = useFetchProfileInfoQuery();
   const profileInfo = data?.user;
+
+  const [deleteProfile] = useDeleteProfileMutation();
+  const navigate = useNavigate();
 
   // Auto-refetch every 60 seconds
   useEffect(() => {
@@ -18,6 +23,22 @@ const ProfilePage = () => {
     }, 60000);
     return () => clearInterval(interval);
   }, [refetch]);
+
+  const handleDeleteProfile = async () => {
+    if (window.confirm('Are you sure u want to delete the profile')) {
+      try {
+        await deleteProfile();
+        alert('Profile deleted successfully');
+        setTimeout(() => {
+          navigate('/')
+        }, 1500)
+      } catch (error) {
+        alert("Error deleting profile");
+      }
+    }
+  }
+
+
 
   const infoBlocks = [
     {
@@ -114,7 +135,9 @@ const ProfilePage = () => {
         <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-red-400 hover:shadow-red-300 transition">
           🚪 Logout
         </button>
-        <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-indigo-400 hover:shadow-indigo-300 transition">
+        <button
+          onClick={handleDeleteProfile}
+          className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-indigo-400 hover:shadow-indigo-300 transition">
           ❌ Delete Account
         </button>
       </div>
