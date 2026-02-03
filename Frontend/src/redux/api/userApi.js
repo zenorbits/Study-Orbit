@@ -21,8 +21,14 @@ export const userApi = createApi({
                 url: '/profileinfo',
                 method: 'GET'
             })
+        }),
+        deleteUser: build.mutation({
+            query: (id) => ({
+                url: `deleteuser/${id}`,
+                method: 'DELETE',
+            })
         })
     })
 });
 
-export const { useFetchStudentCountQuery, useFetchTeacherQuery, useFetchProfileInfoQuery } = userApi;
+export const { useFetchStudentCountQuery, useFetchTeacherQuery, useFetchProfileInfoQuery,useDeleteUserMutation } = userApi;

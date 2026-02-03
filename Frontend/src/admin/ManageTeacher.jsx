@@ -1,16 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { searchFilter } from "../redux/features/searchInputFilter";
-import { useFetchTeacherQuery } from "../redux/api/userApi";
+import { useDeleteUserMutation, useFetchTeacherQuery } from "../redux/api/userApi";
+import { toast } from "react-toastify";
 
 const ManageTeacher = () => {
     const [searchValue, setSearchValue] = useState("");
     const selector = useSelector((state) => state.searchFilter.input);
     const dispatch = useDispatch();
-
-    const { data, isLoading, isError } = useFetchTeacherQuery();
+    const { data, isLoading, isError, refetch } = useFetchTeacherQuery();
     const teachers = data?.teachers || [];
 
+    const [deleteUser] = useDeleteUserMutation();
+
+    const handleDeleteUser = async (id) => {
+        if (window.confirm("Are you sure you want to delete the user?")) {
+            try {
+                await deleteUser(id).unwrap();
+                toast.success("User deleted successfully");
+                refetch();
+            } catch (error) {
+                console.error("Delete failed", error);
+                toast.error(error?.data?.message || "Error deleting User");
+            }
+        }
+    };
 
     if (isLoading) {
         return (
@@ -23,38 +37,6 @@ const ManageTeacher = () => {
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                     Please wait while we fetch the records.
                 </p>
-
-                {/* Skeleton Table */}
-                <div className="mt-10 bg-white/40 dark:bg-black/40 backdrop-blur-md border border-sky-200 dark:border-emerald-600 shadow-md rounded-lg overflow-x-auto w-full sm:w-11/12 md:w-4/5">
-                    <table className="min-w-full border-collapse text-sm sm:text-base">
-                        <thead className="bg-sky-100 dark:bg-gray-800">
-                            <tr>
-                                <th className="px-4 sm:px-6 py-3 text-left">Name</th>
-                                <th className="px-4 sm:px-6 py-3 text-left">Email</th>
-                                <th className="px-4 sm:px-6 py-3 text-left">Phone</th>
-                                <th className="px-4 sm:px-6 py-3 text-left">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {[...Array(5)].map((_, i) => (
-                                <tr key={i} className="border-t border-sky-200 dark:border-emerald-600">
-                                    <td className="px-4 sm:px-6 py-4">
-                                        <div className="h-4 w-24 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
-                                    </td>
-                                    <td className="px-4 sm:px-6 py-4">
-                                        <div className="h-4 w-32 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
-                                    </td>
-                                    <td className="px-4 sm:px-6 py-4">
-                                        <div className="h-4 w-20 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
-                                    </td>
-                                    <td className="px-4 sm:px-6 py-4">
-                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
             </div>
         );
     }
@@ -96,9 +78,16 @@ const ManageTeacher = () => {
                     }}
                     className="w-full sm:w-1/3 px-3 py-2 rounded-lg bg-white text-gray-900 border border-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:bg-gray-800 dark:text-emerald-200 dark:border-emerald-600"
                 />
+
+                {/* Refresh Button */}
+                <button
+                    onClick={refetch}
+                    className="px-4 py-2 rounded-lg bg-sky-500 text-white font-semibold shadow-md hover:bg-sky-600 transition"
+                >
+                    🔄 Refresh
+                </button>
             </div>
 
-            {/* Teacher Table */}
             {/* Teacher Table */}
             <div className="bg-white/40 dark:bg-black/40 backdrop-blur-md border border-sky-200 dark:border-emerald-600 shadow-md rounded-lg overflow-x-auto w-full sm:w-11/12 md:w-4/5 mx-auto">
                 <table className="min-w-full border-collapse text-sm sm:text-base">
@@ -144,7 +133,12 @@ const ManageTeacher = () => {
                                         {teacher.phoneNumber || "N/A"}
                                     </td>
                                     <td className="px-4 sm:px-6 py-4">
-                                        <button className="text-red-600 hover:underline">Delete</button>
+                                        <button
+                                            onClick={() => handleDeleteUser(teacher._id)}
+                                            className="text-red-600 hover:underline"
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             ))
