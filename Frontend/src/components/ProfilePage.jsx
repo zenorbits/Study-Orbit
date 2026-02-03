@@ -117,7 +117,7 @@ const ProfilePage = () => {
       dark:from-gray-900 dark:via-black dark:to-emerald-900"
     >
       {/* Toast Container */}
-      <ToastContainer position="top-right" autoClose={2000} />
+
 
       {/* Profile Header */}
       <div className="flex flex-col items-center mb-12">
