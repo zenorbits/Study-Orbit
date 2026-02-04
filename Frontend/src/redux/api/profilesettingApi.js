@@ -10,6 +10,13 @@ export const profileSettingApi = createApi({
                 url: '/deleteprofile',
                 method: 'DELETE'
             })
+        }),
+        editProfile: build.mutation({
+            query: (updatedData) => ({
+                url:'/editprofile',
+                method:'PATCH',
+                body:updatedData
+            })
         })
     })
 })

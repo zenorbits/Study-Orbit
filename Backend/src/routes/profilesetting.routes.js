@@ -4,5 +4,6 @@ const profileSettingController = require('../controller/profilesetting.controlle
 const middleware = require('../middleware/middleware');
 
 router.delete('/deleteprofile',middleware.authMiddleware,profileSettingController.deleteUser);
+router.patch('/editprofile',middleware.authMiddleware,profileSettingController.editUserProfile);
 
 module.exports = router;

@@ -6,7 +6,8 @@ const editUserProfile = async (req, res) => {
     const updatedData = req.body;
 
     try {
-        const updateUser = await userModel.findByIdAndUpdate(req.user.id,
+        const updateUser = await userModel.findByIdAndUpdate(
+            req.user.id,
             updatedData,
             { new: true, runValidators: true }
         );
