@@ -7,7 +7,7 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import { useDeleteProfileMutation } from "../redux/api/profilesettingApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserLogoutMutation } from "../redux/api/authApi";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/features/authApiSlice";
@@ -152,9 +152,9 @@ const ProfilePage = () => {
 
       {/* Options */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-11/12 md:w-4/5 mx-auto">
-        <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-sky-400 hover:shadow-sky-300 transition">
+        <Link to='/editprofile' className="flex items-center justify-center py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-sky-400 hover:shadow-sky-300 transition">
           ✏️ Edit Profile
-        </button>
+        </Link>
         <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-yellow-400 hover:shadow-yellow-300 transition">
           🔒 Change Password
         </button>

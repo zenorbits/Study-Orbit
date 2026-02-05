@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import Lenis from '@studio-freight/lenis';
+import EditProfileForm from './components/EditProfileForm';
 
 // ✅ Lazy load pages for performance
 const RegisterPage = lazy(() => import('./AuthPages/RegisterPage'));
@@ -74,6 +75,7 @@ const App = () => {
             <Route path="managebatch" element={<ManageBatch />} />
             <Route path="batch" element={<AllTeacherBatch />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="editprofile" element={<EditProfileForm />} />
           </Route>
 
           {/* Admin Routes */}
@@ -89,6 +91,7 @@ const App = () => {
             <Route path="batch" element={<AllTeacherBatch />} />
             <Route path="teachers" element={<ManageTeacher />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="editprofile" element={<EditProfileForm />} />
           </Route>
 
           {/* Student Routes */}
@@ -102,6 +105,7 @@ const App = () => {
             <Route path="batches" element={<Mybatches />} />
             <Route path="batch" element={<AllTeacherBatch />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="editprofile" element={<EditProfileForm />} />
           </Route>
 
           {/* 404 Fallback */}
