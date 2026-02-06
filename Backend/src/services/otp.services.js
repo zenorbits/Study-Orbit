@@ -1,8 +1,10 @@
 const otpGenerator = require("otp-generator");
 const otpModel = require("../models/otp.model");
 
-const generateOtp = async (userId) => {
+const generateOtp = async (req, res) => {
     // Clear old OTPs for this user
+    const userId = req.body
+
     await otpModel.deleteMany({ userId });
 
     // Generate new OTP
@@ -23,4 +25,22 @@ const generateOtp = async (userId) => {
     return otp; // send via email/SMS, not directly to client
 };
 
-module.exports = generateOtp;
+const verifyOtp = async (req, res) => {
+    try {
+        const { userId, otp } = req.body;
+
+        const record = await OtpModel.findOne({ userId });
+        if (!record) return res.status(400).send("No OTP found");
+        if (record.expiresAt < new Date()) return res.status(400).send("OTP expired");
+        if (record.code !== otp) return res.status(400).send("Invalid OTP");
+
+        // Success → mark user verified or issue JWT
+        await OtpModel.deleteMany({ userId }); // clear OTPs
+        await User.findByIdAndUpdate(userId, { isVerified: true }); // optional
+
+        res.json({ message: "OTP verified successfully" });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to verify OTP" });
+    }
+};
+module.exports = { generateOtp };
