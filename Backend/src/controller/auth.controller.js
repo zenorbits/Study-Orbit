@@ -61,6 +61,11 @@ const loginUser = async (req, res) => {
       return res.status(404).json({ message: 'User does not exist' });
     }
 
+    // Block login if not verified
+    if (!user.isVerified) {
+      return res.status(403).json({ message: "Please verify your account with OTP before logging in" });
+    }
+
     const isPassword = await bcrypt.compare(password, user.password);
     if (!isPassword) {
       return res.status(401).json({ message: 'Invalid Credentials' });
