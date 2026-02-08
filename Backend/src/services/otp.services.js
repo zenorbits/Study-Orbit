@@ -33,7 +33,7 @@ const verifyOtp = async (req, res) => {
     try {
         const { userId, otp } = req.body;
 
-        const record = await OtpModel.findOne({ userId });
+        const record = await otpModel.findOne({ userId });
         if (!record) return res.status(400).send("No OTP found");
         if (record.expiresAt < new Date()) return res.status(400).send("OTP expired");
         if (record.code !== otp) return res.status(400).send("Invalid OTP");
