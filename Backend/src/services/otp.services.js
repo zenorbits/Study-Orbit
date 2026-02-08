@@ -1,9 +1,11 @@
 const otpGenerator = require("otp-generator");
 const otpModel = require("../models/otp.model");
+const sendEmail = require('../utils/mailer.utils');
+const User = require('../models/user.model');
 
 const generateOtp = async (req, res) => {
     // Clear old OTPs for this user
-    const userId = req.body
+    const { userId, email } = req.body;
 
     await otpModel.deleteMany({ userId });
 
@@ -22,6 +24,8 @@ const generateOtp = async (req, res) => {
         expiresAt: new Date(Date.now() + 2 * 60 * 1000), // 2 minutes
     });
 
+    await sendEmail(email, otp);
+
     return otp; // send via email/SMS, not directly to client
 };
 
@@ -35,7 +39,7 @@ const verifyOtp = async (req, res) => {
         if (record.code !== otp) return res.status(400).send("Invalid OTP");
 
         // Success → mark user verified or issue JWT
-        await OtpModel.deleteMany({ userId }); // clear OTPs
+        await otpModel.deleteMany({ userId }); // clear OTPs
         await User.findByIdAndUpdate(userId, { isVerified: true }); // optional
 
         res.json({ message: "OTP verified successfully" });
@@ -43,4 +47,4 @@ const verifyOtp = async (req, res) => {
         res.status(500).json({ error: "Failed to verify OTP" });
     }
 };
-module.exports = { generateOtp };
+module.exports = { generateOtp, verifyOtp };

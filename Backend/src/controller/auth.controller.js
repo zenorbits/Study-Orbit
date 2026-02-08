@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const userModel = require('../models/user.model');
+const { generateOtp } = require('../services/otp.services');
 
 // Register
 const registerUser = async (req, res) => {
@@ -23,30 +24,23 @@ const registerUser = async (req, res) => {
     else if (secretKey === process.env.PARENT_SECRETKEY) setRole = 'parent';
     else return res.status(400).json({ message: 'Invalid Credentials' });
 
+    // Create user with isVerified = false
     const user = await userModel.create({
       username,
       email,
       phoneNumber,
       password: hashedPassword,
-      role: setRole
+      role: setRole,
+      isVerified: false
     });
 
-    const token = jwt.sign(
-      { id: user._id, username: user.username, email: user.email, phoneNumber: user.phoneNumber, role: user.role },
-      process.env.JWT_SECRETKEY,
-      { expiresIn: '3h' }
-    );
-
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'None',
-      maxAge: 3 * 60 * 60 * 1000
-    });
+    // Generate OTP and send email
+    req.body.userId = user._id;
+    req.body.email = user.email;
+    await generateOtp(req, res);
 
     return res.status(201).json({
-      message: 'User Registered Successfully',
-      token,
+      message: 'User registered successfully. Please verify OTP sent to your email.',
       user: { id: user._id, username: user.username, email: user.email, phoneNumber: user.phoneNumber, role: user.role }
     });
   } catch (error) {

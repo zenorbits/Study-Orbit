@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     },
     phoneNumber: {
         type: String,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false, // new users start unverified
     }
 }, {
     timestamps: true
