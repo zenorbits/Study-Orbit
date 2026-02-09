@@ -11,7 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUserLogoutMutation } from "../redux/api/authApi";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/features/authApiSlice";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ProfilePage = () => {
@@ -90,6 +90,10 @@ const ProfilePage = () => {
     },
   ];
 
+  // Build dynamic edit profile route based on role
+  const role = profileInfo?.role?.toLowerCase();
+  const editProfileRoute = role ? `/${role}/editprofile` : "/login";
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -116,9 +120,6 @@ const ProfilePage = () => {
       bg-gradient-to-br from-white via-blue-100 to-blue-500 
       dark:from-gray-900 dark:via-black dark:to-emerald-900"
     >
-      {/* Toast Container */}
-
-
       {/* Profile Header */}
       <div className="flex flex-col items-center mb-12">
         <div className="w-28 h-28 rounded-full bg-sky-600 dark:bg-emerald-600 flex items-center justify-center text-white text-4xl font-bold shadow">
@@ -152,7 +153,10 @@ const ProfilePage = () => {
 
       {/* Options */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-11/12 md:w-4/5 mx-auto">
-        <Link to='/editprofile' className="flex items-center justify-center py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-sky-400 hover:shadow-sky-300 transition">
+        <Link
+          to={editProfileRoute}
+          className="flex items-center justify-center py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-sky-400 hover:shadow-sky-300 transition"
+        >
           ✏️ Edit Profile
         </Link>
         <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-yellow-400 hover:shadow-yellow-300 transition">
