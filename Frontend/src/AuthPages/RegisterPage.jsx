@@ -71,7 +71,7 @@ const RegisterPage = () => {
 
         toast.success('Registration successful 🎉');
         setFormData({ username: '', email: '', password: '', phoneNumber: '', specialKey: '' });
-        navigate('/login'); // redirect after success
+        navigate('/otpinp'); // redirect after success
       } else if (response?.error) {
         toast.error(response.error.data?.message || 'Registration failed ❌');
       }

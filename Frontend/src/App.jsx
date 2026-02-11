@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import Lenis from '@studio-freight/lenis';
 import EditProfileForm from './components/EditProfileForm';
+import OTPPage from './components/OTPPage';
 
 // ✅ Lazy load pages for performance
 const RegisterPage = lazy(() => import('./AuthPages/RegisterPage'));
@@ -63,6 +64,7 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/register" element={<ParentAuthPage><RegisterPage /></ParentAuthPage>} />
           <Route path="/login" element={<ParentAuthPage><LoginPage /></ParentAuthPage>} />
+          <Route path="/otpinp" element={<ParentAuthPage><OTPPage /></ParentAuthPage>} />
 
           {/* Teacher Routes */}
           <Route path="/teacher/*" element={
