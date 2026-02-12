@@ -31,7 +31,8 @@ const generateOtp = async (req, res) => {
 
 const verifyOtp = async (req, res) => {
     try {
-        const { userId, otp } = req.body;
+        const { otp } = req.body;
+        const userId = req.user._id;
 
         const record = await otpModel.findOne({ userId });
         if (!record) return res.status(400).send("No OTP found");

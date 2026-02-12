@@ -39,9 +39,24 @@ const registerUser = async (req, res) => {
     req.body.email = user.email;
     await generateOtp(req, res);
 
+    const token = jwt.sign(
+      { id: user._id, username: user.username, email: user.email, phoneNumber: user.phoneNumber, role: user.role },
+      process.env.JWT_SECRETKEY,
+      { expiresIn: '10m' } // short expiry, just for OTP verification
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // only secure in prod
+      sameSite: 'None',
+      maxAge: 10 * 60 * 1000 // 10 minutes
+    });
+
+
+
     return res.status(201).json({
       message: 'User registered successfully. Please verify OTP sent to your email.',
-      user: { id: user._id, username: user.username, email: user.email, phoneNumber: user.phoneNumber, role: user.role }
+      user: { id: user._id, username: user.username, email: user.email, phoneNumber: user.phoneNumber, role: user.role, token }
     });
   } catch (error) {
     console.error(error);
