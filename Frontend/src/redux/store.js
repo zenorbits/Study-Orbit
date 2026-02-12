@@ -6,7 +6,8 @@ import batchReducer from './features/batchSlice'
 import { batchApi } from './api/batchApi'
 import { userApi } from './api/userApi'
 import searchInputReducer from './features/searchInputFilter';
-import { profileSettingApi } from './api/profilesettingApi'
+import { profileSettingApi } from './api/profilesettingApi';
+import { otpApi } from './api/otpApi'
 
 
 export const store = configureStore({
@@ -18,10 +19,11 @@ export const store = configureStore({
         [authApi.reducerPath]: authApi.reducer,
         [batchApi.reducerPath]: batchApi.reducer,
         [userApi.reducerPath]: userApi.reducer,
-        [profileSettingApi.reducerPath]: profileSettingApi.reducer
+        [profileSettingApi.reducerPath]: profileSettingApi.reducer,
+        [otpApi.reducerPath]:otpApi.reducer,
 
     },
 
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(authApi.middleware, batchApi.middleware, userApi.middleware, profileSettingApi.middleware)
+        getDefaultMiddleware().concat(authApi.middleware, batchApi.middleware, userApi.middleware, profileSettingApi.middleware,otpApi.middleware)
 })
