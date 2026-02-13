@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useVerifyOtpMutation } from "../redux/api/otpApi";
+import { useNavigate } from "react-router-dom";
 
 const OTPPage = () => {
   const [otp, setOtp] = useState("");
+  const navigate = useNavigate();
+  const [otpVerification, { isLoading }] = useVerifyOtpMutation();
 
   const handleChange = (e) => {
     const value = e.target.value;
+
+
 
     // ✅ Allow letters + numbers, max 6 characters
     if (/^[a-zA-Z0-9]{0,6}$/.test(value)) {
@@ -14,7 +20,7 @@ const OTPPage = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (otp.length !== 6) {
@@ -22,13 +28,22 @@ const OTPPage = () => {
       return;
     }
 
-    // Simulate verification success
-    toast.success("✅ OTP verified successfully!");
-    console.log("Entered OTP:", otp);
+    try {
+      const response = await otpVerification(otp).unwrap();
+      toast.success("✅ OTP verified successfully!");
+      console.log("Backend response:", response);
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500)
+    } catch (err) {
+      toast.error("❌ Verification failed");
+      console.error("Error verifying OTP:", err);
+    }
   };
 
   const handleResend = () => {
-    toast.info("🔄 New OTP has been sent to your registered email/phone");
+    toast.info("🔄 New OTP has been sent to your registered email");
     console.log("Resend OTP clicked");
   };
 
@@ -51,7 +66,7 @@ const OTPPage = () => {
             htmlFor="otp"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            Enter One-Time Password
+            Enter One-Time Password sent to your e-mail
           </label>
           <input
             type="text"
@@ -70,10 +85,11 @@ const OTPPage = () => {
 
         <button
           type="submit"
+          disabled={isLoading}
           className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md 
-                     hover:bg-indigo-700 transition-colors dark:bg-indigo-500 dark:hover:bg-indigo-600"
+             hover:bg-indigo-700 transition-colors dark:bg-indigo-500 dark:hover:bg-indigo-600"
         >
-          Verify OTP
+          {isLoading ? "Verifying..." : "Verify OTP"}
         </button>
 
         <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">

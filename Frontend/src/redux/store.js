@@ -20,10 +20,9 @@ export const store = configureStore({
         [batchApi.reducerPath]: batchApi.reducer,
         [userApi.reducerPath]: userApi.reducer,
         [profileSettingApi.reducerPath]: profileSettingApi.reducer,
-        [otpApi.reducerPath]:otpApi.reducer,
-
+        [otpApi.reducerPath]: otpApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(authApi.middleware, batchApi.middleware, userApi.middleware, profileSettingApi.middleware,otpApi.middleware)
+        getDefaultMiddleware().concat(authApi.middleware, batchApi.middleware, userApi.middleware, profileSettingApi.middleware, otpApi.middleware)
 })

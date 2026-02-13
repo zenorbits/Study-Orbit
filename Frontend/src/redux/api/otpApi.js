@@ -14,4 +14,4 @@ export const otpApi = createApi({
     })
 });
 
-const { useVerifyOtpMutation } = otpApi
+export const { useVerifyOtpMutation } = otpApi
