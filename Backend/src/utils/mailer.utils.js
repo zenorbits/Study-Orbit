@@ -2,7 +2,7 @@ const Brevo = require('@getbrevo/brevo');
 const client = new Brevo.TransactionalEmailsApi();
 
 // configure API key
-client.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_PASSWORD);
+client.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
 
 const sendEmail = async (to, otp) => {
   try {
