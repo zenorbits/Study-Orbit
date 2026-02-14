@@ -25,6 +25,8 @@ const sendEmail = async (to, otp) => {
             html: `<p>Your OTP is <b>${otp}</b></p>`, // HTML version of the message
         });
         console.log(info);
+        console.log("OTP email sent successfully");
+
     } catch (error) {
         console.log(error);
     }

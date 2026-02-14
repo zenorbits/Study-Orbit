@@ -7,6 +7,7 @@ const { generateOtp } = require('../services/otp.services');
 const registerUser = async (req, res) => {
   const { username, email, phoneNumber, password, secretKey } = req.body;
 
+
   try {
     const userExists = await userModel.findOne({
       $or: [{ email }, { phoneNumber }]
