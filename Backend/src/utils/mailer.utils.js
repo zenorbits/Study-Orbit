@@ -1,35 +1,24 @@
-const nodemailer = require('nodemailer');
+const Brevo = require('@getbrevo/brevo');
+const client = new Brevo.TransactionalEmailsApi();
 
-
-// Create a transporter using Ethereal test credentials.
-// For production, replace with your actual SMTP server details.
-const transporter = nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false, // Use true for port 465, false for port 587
-    auth: {
-        user: process.env.BREVO_USER,
-        pass: process.env.BREVO_PASSWORD,
-    },
-});
-
-// Send an email using async/await
+// configure API key
+client.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_PASSWORD);
 
 const sendEmail = async (to, otp) => {
-    try {
-        const info = await transporter.sendMail({
-            from: process.env.BREVO_USER,
-            to,
-            subject: "Your OTP Code",
-            text: `Your OTP is ${otp}`, // Plain-text version of the message
-            html: `<p>Your OTP is <b>${otp}</b></p>`, // HTML version of the message
-        });
-        console.log(info);
-        console.log("OTP email sent successfully");
+  try {
+    const email = {
+      sender: { email: process.env.BREVO_USER }, // must be a verified sender in Brevo
+      to: [{ email: to }],
+      subject: "Your OTP Code",
+      textContent: `Your OTP is ${otp}`,
+      htmlContent: `<p>Your OTP is <b>${otp}</b></p>`,
+    };
 
-    } catch (error) {
-        console.log(error);
-    }
-}
+    const response = await client.sendTransacEmail(email);
+    console.log("OTP email sent successfully:", response);
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+  }
+};
 
-module.exports = sendEmail
+module.exports = sendEmail;
