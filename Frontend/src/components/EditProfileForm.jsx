@@ -3,8 +3,7 @@ import React, { useState } from "react";
 const EditProfileForm = () => {
   const [formData, setFormData] = useState({
     username: "",
-    email: "",
-    password: ""
+    email: ""
   });
 
   const handleChange = (e) => {
@@ -56,7 +55,7 @@ const EditProfileForm = () => {
         </div>
 
         {/* Email */}
-        <div className="mb-4">
+        <div className="mb-6">
           <label
             htmlFor="email"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -74,28 +73,6 @@ const EditProfileForm = () => {
             className="w-full px-4 py-2 border border-emerald-400 rounded-md 
                        bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 
                        focus:ring-2 focus:ring-emerald-400 focus:outline-none"
-          />
-        </div>
-
-        {/* Password */}
-        <div className="mb-6">
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter new password"
-            required
-            className="w-full px-4 py-2 border border-purple-400 rounded-md 
-                       bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 
-                       focus:ring-2 focus:ring-purple-400 focus:outline-none"
           />
         </div>
 
