@@ -21,4 +21,4 @@ export const profileSettingApi = createApi({
     })
 })
 
-export const { useDeleteProfileMutation } = profileSettingApi
+export const { useDeleteProfileMutation,useEditProfileMutation } = profileSettingApi

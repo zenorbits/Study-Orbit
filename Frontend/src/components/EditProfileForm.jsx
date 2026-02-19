@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useEditProfileMutation } from "../redux/api/profilesettingApi";
 
 const EditProfileForm = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: ""
   });
+
+  const [editProfile, { isError, isLoading }] = useEditProfileMutation();
 
   const handleChange = (e) => {
     setFormData({
@@ -13,10 +16,16 @@ const EditProfileForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated Profile:", formData);
+    try {
+      await editProfile(formData).unwrap();
+      alert("Profile updated successfully!");
+    } catch (err) {
+      alert("Failed to update profile. Please try again.");
+    }
   };
+
 
   return (
     <div
@@ -79,10 +88,12 @@ const EditProfileForm = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md 
-                     hover:bg-indigo-700 transition-colors dark:bg-indigo-500 dark:hover:bg-indigo-600"
+          disabled={isLoading}
+          className={`w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md 
+              hover:bg-indigo-700 transition-colors dark:bg-indigo-500 dark:hover:bg-indigo-600
+              ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
         >
-          Save Changes
+          {isLoading ? "Saving..." : "Save Changes"}
         </button>
       </form>
     </div>
