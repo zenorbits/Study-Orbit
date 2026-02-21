@@ -1,11 +1,29 @@
 const userModel = require('../models/user.model');
+const bcrypt = require('bcryptjs');
 
 
 const editUserProfile = async (req, res) => {
 
-    const updatedData = req.body;
+    const { updatedData, password } = req.body;
 
     try {
+
+        const user = await userModel.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            })
+        }
+
+        const isPassword = await bcrypt.compare(password, user.password)
+
+        if (!isPassword) {
+            return res.status(401).json({
+                message: 'Unauthorized'
+            })
+        }
+
         const updateUser = await userModel.findByIdAndUpdate(
             req.user.id,
             updatedData,

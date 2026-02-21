@@ -12,10 +12,10 @@ export const profileSettingApi = createApi({
             })
         }),
         editProfile: build.mutation({
-            query: (updatedData) => ({
+            query: ({updatedData,password}) => ({
                 url:'/editprofile',
                 method:'PATCH',
-                body:updatedData
+                body:{updatedData,password}
             })
         })
     })
