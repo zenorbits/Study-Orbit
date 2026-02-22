@@ -105,7 +105,7 @@ const LoginPage = () => {
 
           {/* Password */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-1">
+            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
               Password
             </label>
             <input
@@ -117,6 +117,16 @@ const LoginPage = () => {
               autoComplete="off"
               className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-white/30 rounded-lg bg-white dark:bg-white/10 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400"
             />
+
+            {/* Forgot Password link directly below password field */}
+            <div className="flex justify-between items-center mt-2">
+              <Link
+                to="/forgotpassword"
+                className="text-sm font-medium text-sky-500 hover:text-sky-700 dark:text-emerald-400 dark:hover:text-emerald-500"
+              >
+                Forgot Password?
+              </Link>
+            </div>
           </div>
 
           {/* Submit Button */}

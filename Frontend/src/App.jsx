@@ -5,6 +5,7 @@ import ProtectedRoutes from './components/ProtectedRoutes';
 import Lenis from '@studio-freight/lenis';
 import EditProfileForm from './components/EditProfileForm';
 import OTPPage from './components/OTPPage';
+import ForgotPasswordPage from './components/ForgotPasswordPage';
 
 // ✅ Lazy load pages for performance
 const RegisterPage = lazy(() => import('./AuthPages/RegisterPage'));
@@ -112,6 +113,7 @@ const App = () => {
 
           {/* 404 Fallback */}
           <Route path="*" element={<div className="p-10 text-center">404 - Page Not Found</div>} />
+          <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
         </Routes>
       </Suspense>
     </Layout>
