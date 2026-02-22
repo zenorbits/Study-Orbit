@@ -24,7 +24,7 @@ const generateOtp = async (req, res) => {
         expiresAt: new Date(Date.now() + 2 * 60 * 1000), // 2 minutes
     });
 
-    await sendEmail(email, otp);
+    await sendEmail(email, "otp", otp);
 
     return otp; // send via email/SMS, not directly to client
 };
