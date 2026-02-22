@@ -14,7 +14,7 @@ export const profileSettingApi = createApi({
         editProfile: build.mutation({
             query: ({updatedData,password}) => ({
                 url:'/editprofile',
-                method:'PATCH',
+                method:'POST',
                 body:{updatedData,password}
             })
         })

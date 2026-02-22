@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useEditProfileMutation } from "../redux/api/profilesettingApi";
+import { toast } from "react-toastify";   // <-- import toast
+import "react-toastify/dist/ReactToastify.css";
 
 const EditProfileForm = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    password: ""   // added password field
+    password: ""
   });
 
   const [editProfile, { isError, isLoading }] = useEditProfileMutation();
@@ -19,11 +21,25 @@ const EditProfileForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // ✅ Validation: at least one of username/email must be filled, and password is required
+    if ((!formData.username && !formData.email) || !formData.password) {
+      toast.error("Please provide either username or email, and password is required.");
+      return;
+    }
+
     try {
-      await editProfile(formData).unwrap();
-      alert("Profile updated successfully!");
+      await editProfile({
+        updatedData: {
+          username: formData.username || undefined,
+          email: formData.email || undefined
+        },
+        password: formData.password
+      }).unwrap();
+
+      toast.success("Profile updated successfully!");
     } catch (err) {
-      alert("Failed to update profile. Please try again.");
+      toast.error("Failed to update profile. Please try again.");
     }
   };
 
@@ -47,7 +63,7 @@ const EditProfileForm = () => {
             htmlFor="username"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            Username
+            Username (optional)
           </label>
           <input
             type="text"
@@ -56,7 +72,6 @@ const EditProfileForm = () => {
             value={formData.username}
             onChange={handleChange}
             placeholder="Enter your username"
-            required
             className="w-full px-4 py-2 border border-sky-400 rounded-md 
                        bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 
                        focus:ring-2 focus:ring-sky-400 focus:outline-none"
@@ -69,7 +84,7 @@ const EditProfileForm = () => {
             htmlFor="email"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            Email
+            Email (optional)
           </label>
           <input
             type="email"
@@ -78,7 +93,6 @@ const EditProfileForm = () => {
             value={formData.email}
             onChange={handleChange}
             placeholder="Enter your email"
-            required
             className="w-full px-4 py-2 border border-emerald-400 rounded-md 
                        bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 
                        focus:ring-2 focus:ring-emerald-400 focus:outline-none"
@@ -91,7 +105,7 @@ const EditProfileForm = () => {
             htmlFor="password"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            Password
+            Current Password (required)
           </label>
           <input
             type="password"
@@ -101,6 +115,7 @@ const EditProfileForm = () => {
             onChange={handleChange}
             autoComplete="off"
             placeholder="Enter your current password"
+            required
             className="w-full px-4 py-2 border border-purple-400 rounded-md 
                        bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 
                        focus:ring-2 focus:ring-purple-400 focus:outline-none"
