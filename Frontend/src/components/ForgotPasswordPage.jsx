@@ -4,11 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toggleMode } from "../redux/features/toggleThemeSlice";
+import { useForgotPasswordMutation } from "../redux/api/resetpasswordApi";
 
 const ForgotPasswordPage = () => {
   const [emailOrphoneNumber, setEmailOrphoneNumber] = useState("");
   const selector = useSelector((state) => state.toggleTheme.value);
   const dispatch = useDispatch();
+
+  const [forgotPasswordMutation, { isLoading }] = useForgotPasswordMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,13 +22,13 @@ const ForgotPasswordPage = () => {
       return;
     }
 
-    // ✅ Placeholder for API call
     try {
-      // Example: await axios.post("/api/auth/forgot-password", { emailOrphoneNumber });
-      toast.success("✅ Password reset instructions sent");
+      // ✅ Await the mutation and unwrap the response
+      const response = await forgotPasswordMutation({ email: emailOrphoneNumber }).unwrap();
+      toast.success(response.message || "✅ Password reset instructions sent");
       setEmailOrphoneNumber("");
     } catch (err) {
-      toast.error("❌ Something went wrong, please try again");
+      toast.error(err.data?.message || "❌ Something went wrong, please try again");
     }
   };
 
@@ -78,6 +81,7 @@ const ForgotPasswordPage = () => {
               value={emailOrphoneNumber}
               onChange={(e) => setEmailOrphoneNumber(e.target.value)}
               placeholder="Enter your email or phone number"
+              required
               className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-white/30 rounded-lg 
                          bg-white dark:bg-white/10 text-black dark:text-white 
                          placeholder-gray-400 dark:placeholder-gray-300 
@@ -88,10 +92,11 @@ const ForgotPasswordPage = () => {
           {/* Submit Button */}
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full bg-sky-500 dark:bg-emerald-500 text-white font-semibold py-2 sm:py-3 rounded-lg 
-                       hover:bg-sky-600 dark:hover:bg-emerald-600 transition duration-200 active:scale-95"
+                       hover:bg-sky-600 dark:hover:bg-emerald-600 transition duration-200 active:scale-95 disabled:opacity-50"
           >
-            Send Reset Link
+            {isLoading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
 
