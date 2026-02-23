@@ -7,6 +7,7 @@ const batchRouter = require('./routes/batch.routes');
 const fetchUserRouter = require('./routes/fetchuser.routes');
 const profileSettingRouter = require('./routes/profilesetting.routes');
 const deleteUserRoutes = require('./routes/deleteUser.routes');
+const forgotPasswordRoutes = require('./routes/forgotpassword.routes');
 
 
 dotenv.config();
@@ -55,6 +56,10 @@ app.use('/api/user', fetchUserRouter);
 app.use('/api/profile', profileSettingRouter)
 
 //delete user 
-app.use('/api/user',deleteUserRoutes);
+app.use('/api/user', deleteUserRoutes);
+
+//Password Reset
+
+app.use('/api/password', forgotPasswordRoutes);
 
 module.exports = app;

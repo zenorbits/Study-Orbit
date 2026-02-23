@@ -13,14 +13,20 @@ const ForgotPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!emailOrphoneNumber) {
-      toast.error("Please enter your email or phone number ❌");
+    // Trim to avoid spaces-only input
+    if (!emailOrphoneNumber.trim()) {
+      toast.error("❌ Please enter your email or phone number");
       return;
     }
 
-    // Placeholder for API call
-    toast.success("Password reset instructions sent ✅");
-    setEmailOrphoneNumber("");
+    // ✅ Placeholder for API call
+    try {
+      // Example: await axios.post("/api/auth/forgot-password", { emailOrphoneNumber });
+      toast.success("✅ Password reset instructions sent");
+      setEmailOrphoneNumber("");
+    } catch (err) {
+      toast.error("❌ Something went wrong, please try again");
+    }
   };
 
   // ✅ Sync Redux state with Tailwind's dark mode
@@ -52,7 +58,7 @@ const ForgotPasswordPage = () => {
 
       {/* Forgot Password Card */}
       <div className="backdrop-blur-lg bg-white/70 dark:bg-gradient-to-br from-gray-900 via-black to-emerald-900 shadow-2xl rounded-xl p-6 sm:p-8 md:p-10 w-full max-w-sm sm:max-w-md lg:max-w-lg border border-gray-200 dark:border-white/20">
-        
+
         {/* Title */}
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-sky-500 dark:text-emerald-400 mb-6">
           Forgot Password 🔑
