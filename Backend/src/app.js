@@ -8,6 +8,7 @@ const fetchUserRouter = require('./routes/fetchuser.routes');
 const profileSettingRouter = require('./routes/profilesetting.routes');
 const deleteUserRoutes = require('./routes/deleteUser.routes');
 const forgotPasswordRoutes = require('./routes/forgotpassword.routes');
+const resetPasswordRoutes = require('./routes/resetpassword.routes');
 
 
 dotenv.config();
@@ -61,5 +62,8 @@ app.use('/api/user', deleteUserRoutes);
 //Password Reset
 
 app.use('/api/password', forgotPasswordRoutes);
+
+app.use('/api/password',resetPasswordRoutes);
+
 
 module.exports = app;
