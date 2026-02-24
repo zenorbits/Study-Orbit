@@ -18,7 +18,7 @@ const forgotPassword = async (req, res) => {
       { expiresIn: '15m' }
     );
 
-    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+    const resetLink = `https://study-orbit-backend.onrender.com/reset-password?token=${token}`;
 
     // Use unified sendEmail utility
     await sendEmail(email, "reset", resetLink);
