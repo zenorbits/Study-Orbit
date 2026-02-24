@@ -31,40 +31,42 @@ const LoginPage = () => {
     const { emailOrphoneNumber, password } = formData;
 
     if (!emailOrphoneNumber || !password) {
-      toast.error('Please fill in all required credentials ❌');
+      toast.error('❌ Please fill in all required credentials');
       return;
     }
 
     try {
-      const response = await loginMutation({ emailOrphoneNumber, password });
-      console.log(response);
+      // ✅ Use unwrap to catch errors directly
+      const response = await loginMutation({ emailOrphoneNumber, password }).unwrap();
 
-      if (response?.data) {
-        const { user, token } = response.data;
+      const { user, token } = response;
 
-        // ✅ Save credentials in Redux
-        dispatch(setCredentials({
-          username: user.username,
-          email: user.email,
-          phoneNumber: user.phoneNumber,
-          role: user.role.toLowerCase(),
-          token
-        }));
+      // ✅ Save credentials in Redux
+      dispatch(setCredentials({
+        username: user.username,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        role: user.role.toLowerCase(),
+        token
+      }));
 
-        toast.success('Login successful 🎉');
-        setFormData({ emailOrphoneNumber: '', password: '' });
+      toast.success('🎉 Login successful');
+      setFormData({ emailOrphoneNumber: '', password: '' });
 
-        // ✅ Role-based navigation
-        if (user.role === 'admin') navigate('/admin');
-        else if (user.role === 'teacher') navigate('/teacher');
-        else if (user.role === 'parent') navigate('/parent');
-        else if (user.role === 'student') navigate('/student');
-        else navigate('/unauthorized');
-      } else if (response?.error) {
-        toast.error(response.error.data?.message || 'Login failed ❌');
-      }
+      // ✅ Role-based navigation
+      if (user.role === 'admin') navigate('/admin');
+      else if (user.role === 'teacher') navigate('/teacher');
+      else if (user.role === 'parent') navigate('/parent');
+      else if (user.role === 'student') navigate('/student');
+      else navigate('/unauthorized');
+
     } catch (err) {
-      toast.error('Something went wrong ❌');
+      // ✅ Show toast for invalid credentials or server error
+      if (err?.status === 401) {
+        toast.error('❌ Invalid credentials, please try again');
+      } else {
+        toast.error(err?.data?.message || '❌ Something went wrong');
+      }
     }
   };
 
@@ -118,7 +120,7 @@ const LoginPage = () => {
               className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-white/30 rounded-lg bg-white dark:bg-white/10 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400"
             />
 
-            {/* Forgot Password link directly below password field */}
+            {/* Forgot Password link */}
             <div className="flex justify-between items-center mt-2">
               <Link
                 to="/forgotpassword"
