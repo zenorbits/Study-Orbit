@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useCreateAnnouncementMutation } from '../redux/api/announcementsApi';
+import { toast } from 'react-toastify';
 
 const AnnouncementPage = ({ role }) => {
   const [showForm, setShowForm] = useState(false);
@@ -6,29 +8,26 @@ const AnnouncementPage = ({ role }) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const announcements = [
-    {
-      title: "Exam Schedule Released",
-      message: "The final exam timetable has been published. Please check the notice board."
-    },
-    {
-      title: "Holiday Notice",
-      message: "School will remain closed on Friday due to maintenance."
-    }
-  ];
+  const [createAnnouncement, { isLoading }] = useCreateAnnouncementMutation();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!title.trim()) {
       setError("Title cannot be empty");
       return;
     }
-    // Normally you’d push this to state or backend
-    console.log("New Announcement:", { title, message });
-    setError("");
-    setTitle("");
-    setMessage("");
-    setShowForm(false);
+
+    try {
+      await createAnnouncement({ title, message }).unwrap();
+      toast.success("✅ Announcement created successfully!");
+      setError("");
+      setTitle("");
+      setMessage("");
+      setShowForm(false);
+    } catch (err) {
+      toast.error(err?.data?.message || "❌ Failed to create announcement");
+    }
   };
 
   return (
@@ -39,19 +38,6 @@ const AnnouncementPage = ({ role }) => {
         text-gray-900 dark:text-white"
     >
       <h1 className="text-3xl font-bold mb-8">📢 Announcements</h1>
-
-      {announcements.map((a, index) => (
-        <div
-          key={index}
-          className="border border-emerald-500 rounded-lg p-6 mb-6
-            bg-white/80 dark:bg-black/40 backdrop-blur-md shadow-lg"
-        >
-          <h2 className="text-xl font-semibold mb-2 text-sky-600 dark:text-emerald-400">
-            {a.title}
-          </h2>
-          <p className="text-gray-700 dark:text-gray-200">{a.message}</p>
-        </div>
-      ))}
 
       {(role === "admin" || role === "teacher") && (
         <button
@@ -100,10 +86,11 @@ const AnnouncementPage = ({ role }) => {
               ></textarea>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700
-                  dark:bg-emerald-500 dark:hover:bg-emerald-600 transition"
+                  dark:bg-emerald-500 dark:hover:bg-emerald-600 transition disabled:opacity-50"
               >
-                Submit
+                {isLoading ? "Submitting..." : "Submit"}
               </button>
             </form>
           </div>
