@@ -5,8 +5,7 @@ import ProtectedRoutes from './components/ProtectedRoutes';
 import Lenis from '@studio-freight/lenis';
 import EditProfileForm from './components/EditProfileForm';
 import OTPPage from './components/OTPPage';
-import ForgotPasswordPage from './components/ForgotPasswordPage';
-import ResetPasswordPage from './components/ResetPasswordPage';
+
 
 // ✅ Lazy load pages for performance
 const RegisterPage = lazy(() => import('./AuthPages/RegisterPage'));
@@ -27,6 +26,9 @@ const BrowseBatch = lazy(() => import('./student/batch(Student)/BrowseBatch'));
 const Mybatches = lazy(() => import('./student/batch(Student)/Mybatches'));
 const ManageTeacher = lazy(() => import('./admin/ManageTeacher'));
 const ProfilePage = lazy(() => import('./components/ProfilePage'));
+const ForgotPasswordPage = lazy(() => import('./components/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('./components/ResetPasswordPage'));
+const AnnouncementPage = lazy(() => import('./components/AnnouncementPage'))
 
 // ✅ Layout wrapper with Lenis smooth scroll
 const Layout = ({ children }) => {
@@ -96,6 +98,7 @@ const App = () => {
             <Route path="teachers" element={<ManageTeacher />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="editprofile" element={<EditProfileForm />} />
+            <Route path="announcements" element={<AnnouncementPage role={'admin'} />} />
           </Route>
 
           {/* Student Routes */}
