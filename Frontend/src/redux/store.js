@@ -9,6 +9,7 @@ import searchInputReducer from './features/searchInputFilter';
 import { profileSettingApi } from './api/profilesettingApi';
 import { otpApi } from './api/otpApi'
 import { resetPasswordApi } from './api/resetpasswordApi'
+import { announcementApi } from './api/announcementsApi'
 
 
 
@@ -23,9 +24,10 @@ export const store = configureStore({
         [userApi.reducerPath]: userApi.reducer,
         [profileSettingApi.reducerPath]: profileSettingApi.reducer,
         [otpApi.reducerPath]: otpApi.reducer,
-        [resetPasswordApi.reducerPath]:resetPasswordApi.reducer
+        [resetPasswordApi.reducerPath]: resetPasswordApi.reducer,
+        [announcementApi.reducerPath]: announcementApi.reducer
     },
 
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(authApi.middleware, batchApi.middleware, userApi.middleware, profileSettingApi.middleware, otpApi.middleware,resetPasswordApi.middleware)
+        getDefaultMiddleware().concat(authApi.middleware, batchApi.middleware, userApi.middleware, profileSettingApi.middleware, otpApi.middleware, resetPasswordApi.middleware, announcementApi.middleware)
 })
