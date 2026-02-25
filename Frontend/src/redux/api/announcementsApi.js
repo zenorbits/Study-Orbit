@@ -10,8 +10,14 @@ export const announcementApi = createApi({
                 method: 'POST',
                 body: { title, message }
             })
+        }),
+        getAnnouncements: build.query({
+            query: () => ({
+                url: '/getannouncement',
+                method: 'GET'
+            })
         })
     })
 })
 
-export const { useCreateAnnouncementMutation } = announcementApi;
+export const { useCreateAnnouncementMutation,useGetAnnouncementsQuery } = announcementApi;

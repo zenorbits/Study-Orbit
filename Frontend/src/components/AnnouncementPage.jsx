@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useCreateAnnouncementMutation } from '../redux/api/announcementsApi';
+import React, { useState, useEffect } from 'react';
+import { useCreateAnnouncementMutation, useGetAnnouncementsQuery } from '../redux/api/announcementsApi';
 import { toast } from 'react-toastify';
 
 const AnnouncementPage = ({ role }) => {
@@ -9,6 +9,13 @@ const AnnouncementPage = ({ role }) => {
   const [error, setError] = useState("");
 
   const [createAnnouncement, { isLoading }] = useCreateAnnouncementMutation();
+  const { data, isLoading: loadingGetAnnouncement } = useGetAnnouncementsQuery();
+
+  useEffect(() => {
+    if (data) {
+      console.log("Fetched announcements:", data);
+    }
+  }, [data]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +46,14 @@ const AnnouncementPage = ({ role }) => {
     >
       <h1 className="text-3xl font-bold mb-8">📢 Announcements</h1>
 
+      {loadingGetAnnouncement && <p>Loading announcements...</p>}
+      {data?.data?.map((a) => (
+        <div key={a._id} className="border rounded-lg p-6 mb-6 shadow-lg">
+          <h2 className="text-xl font-semibold mb-2">{a.title}</h2>
+          <p>{a.message}</p>
+        </div>
+      ))}
+
       {(role === "admin" || role === "teacher") && (
         <button
           onClick={() => setShowForm(true)}
@@ -50,11 +65,9 @@ const AnnouncementPage = ({ role }) => {
         </button>
       )}
 
-      {/* Modal Form */}
       {showForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2 p-6 relative">
-            {/* Close Button */}
             <button
               onClick={() => setShowForm(false)}
               className="absolute top-3 right-3 text-gray-600 dark:text-gray-300 hover:text-red-500"
@@ -62,9 +75,7 @@ const AnnouncementPage = ({ role }) => {
               ❌
             </button>
 
-            <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">
-              Add New Announcement
-            </h2>
+            <h2 className="text-2xl font-bold mb-4">Add New Announcement</h2>
 
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               <input
