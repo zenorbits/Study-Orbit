@@ -33,4 +33,20 @@ const createAnnouncements = async (req, res) => {
 };
 
 
-module.exports = {createAnnouncements}
+const getAnnouncements = async (req, res) => {
+    try {
+
+        const announcements = await announcementsModel.find().populate('createdBy').sort({ createdAt: -1 });
+
+        res.json({
+            success: true,
+            data: announcements
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+
+    }
+}
+
+
+module.exports = { createAnnouncements,getAnnouncements }
