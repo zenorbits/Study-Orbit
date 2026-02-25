@@ -16,8 +16,15 @@ export const announcementApi = createApi({
                 url: '/getannouncement',
                 method: 'GET'
             })
+        }),
+        deleteAnnouncements: build.mutation({
+            query: (id) => ({
+                url: '/deleteannouncments',
+                method: 'DELETE',
+                body: { id }
+            })
         })
     })
 })
 
-export const { useCreateAnnouncementMutation,useGetAnnouncementsQuery } = announcementApi;
+export const { useCreateAnnouncementMutation, useGetAnnouncementsQuery, useDeleteAnnouncementsMutation } = announcementApi;

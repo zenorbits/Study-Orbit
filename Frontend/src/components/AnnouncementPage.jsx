@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useCreateAnnouncementMutation, useGetAnnouncementsQuery } from '../redux/api/announcementsApi';
+import {
+  useCreateAnnouncementMutation,
+  useDeleteAnnouncementsMutation,
+  useGetAnnouncementsQuery
+} from '../redux/api/announcementsApi';
 import { toast } from 'react-toastify';
 
 const AnnouncementPage = ({ role }) => {
@@ -9,13 +13,8 @@ const AnnouncementPage = ({ role }) => {
   const [error, setError] = useState("");
 
   const [createAnnouncement, { isLoading }] = useCreateAnnouncementMutation();
-  const { data, isLoading: loadingGetAnnouncement } = useGetAnnouncementsQuery();
-
-  useEffect(() => {
-    if (data) {
-      console.log("Fetched announcements:", data);
-    }
-  }, [data]);
+  const { data, isLoading: loadingGetAnnouncement, refetch } = useGetAnnouncementsQuery();
+  const [deleteAnnouncement] = useDeleteAnnouncementsMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,6 +31,7 @@ const AnnouncementPage = ({ role }) => {
       setTitle("");
       setMessage("");
       setShowForm(false);
+      refetch(); // refresh after creating
     } catch (err) {
       toast.error(err?.data?.message || "❌ Failed to create announcement");
     }
@@ -44,13 +44,50 @@ const AnnouncementPage = ({ role }) => {
         dark:from-gray-900 dark:via-black dark:to-emerald-900
         text-gray-900 dark:text-white"
     >
-      <h1 className="text-3xl font-bold mb-8">📢 Announcements</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold">📢 Announcements</h1>
+        {(role === "admin" || role === "teacher") && (
+          <button
+            onClick={refetch}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-md 
+                       hover:bg-blue-700 transition-transform transform hover:scale-105"
+          >
+            🔄 Refresh
+          </button>
+        )}
+      </div>
 
       {loadingGetAnnouncement && <p>Loading announcements...</p>}
       {data?.data?.map((a) => (
-        <div key={a._id} className="border rounded-lg p-6 mb-6 shadow-lg">
-          <h2 className="text-xl font-semibold mb-2">{a.title}</h2>
-          <p>{a.message}</p>
+        <div key={a._id} className="border rounded-lg p-6 mb-6 shadow-lg flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold mb-2">{a.title}</h2>
+            <p>{a.message}</p>
+          </div>
+
+          {(role === "admin" || role === "teacher") && (
+            <button
+              onClick={async () => {
+                const confirmed = window.confirm("Are you sure you want to delete this announcement?");
+                if (!confirmed) return;
+
+                try {
+                  await deleteAnnouncement(a._id).unwrap();
+                  toast.success("🗑 Announcement deleted successfully!");
+                  refetch();
+                } catch (err) {
+                  toast.error(err?.data?.message || "❌ Failed to delete announcement");
+                }
+              }}
+              className="ml-auto px-4 py-2 flex items-center gap-2 
+                         bg-gradient-to-r from-red-600 to-red-700 
+                         text-white font-semibold rounded-md shadow-md 
+                         hover:from-red-700 hover:to-red-800 
+                         transition-transform transform hover:scale-105"
+            >
+              🗑 <span>Delete</span>
+            </button>
+          )}
         </div>
       ))}
 
