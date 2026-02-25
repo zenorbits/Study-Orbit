@@ -35,7 +35,6 @@ const createAnnouncements = async (req, res) => {
 
 const getAnnouncements = async (req, res) => {
     try {
-
         const announcements = await announcementsModel.find().populate('createdBy').sort({ createdAt: -1 });
 
         res.json({
@@ -44,9 +43,28 @@ const getAnnouncements = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
+    }
+}
 
+const deleteAnnouncements = async (req, res) => {
+    try {
+        const { id } = req.body;
+
+        const deletedAnnouncement = await announcementsModel.findByIdAndDelete(id);
+
+        if (!deletedAnnouncement) {
+            return res.status(404).json({ success: false, message: 'Announcement not found' });
+        }
+
+
+        res.json({
+            success: true,
+            message: 'Announcement deleted successfully'
+        })
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
     }
 }
 
 
-module.exports = { createAnnouncements,getAnnouncements }
+module.exports = { createAnnouncements, getAnnouncements,deleteAnnouncements }
