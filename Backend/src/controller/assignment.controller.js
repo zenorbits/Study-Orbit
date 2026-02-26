@@ -1,0 +1,35 @@
+const assignmentModel = require('../models/assignment.model');
+
+const createAssignment = async (req, res) => {
+    try {
+        const { title, description, dueDate } = req.body;
+
+        if (!title || !description || !dueDate) {
+            return res.status(400).json({
+                success: false,
+                message: 'Title, description, and due date are required'
+            });
+        }
+
+        const newAssignment = await assignmentModel.create({
+            title,
+            description,
+            dueDate,
+            createdBy: req.user?._id // if you’re using auth middleware
+        });
+
+        res.status(201).json({
+            success: true,
+            message: 'Assignment created successfully',
+            data: newAssignment
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error'
+        });
+    }
+};
+
+module.exports = { createAssignment };
