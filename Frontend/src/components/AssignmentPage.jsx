@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
     useCreateAssignmentMutation,
-    useGetAssignmentQuery
+    useGetAssignmentsQuery,
+    useDeleteAssignmentMutation
 } from '../redux/api/assignmentsApi';
 import { toast } from "react-toastify";
 
@@ -12,7 +13,8 @@ const AssignmentPage = ({ role }) => {
     const [dueDate, setDueDate] = useState("");
 
     const [createAssignment, { isLoading }] = useCreateAssignmentMutation();
-    const { data, isLoading: loadingAssignments, refetch } = useGetAssignmentQuery();
+    const { data, isLoading: loadingAssignments, refetch } = useGetAssignmentsQuery();
+    const [deleteAssignment] = useDeleteAssignmentMutation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -51,12 +53,40 @@ const AssignmentPage = ({ role }) => {
 
             {loadingAssignments && <p>Loading assignments...</p>}
             {data?.data?.map((a) => (
-                <div key={a._id} className="border rounded-lg p-6 mb-6 shadow-lg">
-                    <h2 className="text-xl font-semibold mb-2">{a.title}</h2>
-                    <p>{a.description}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                        📅 Due: {new Date(a.dueDate).toLocaleDateString()}
-                    </p>
+                <div key={a._id} className="border rounded-lg p-6 mb-6 shadow-lg flex items-center justify-between">
+                    <div>
+                        <h2 className="text-xl font-semibold mb-2">{a.title}</h2>
+                        <p>{a.description}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                            📅 Due: {new Date(a.dueDate).toLocaleDateString()}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            👤 Created by: {a.createdBy?.name || "Unknown"}
+                        </p>
+                    </div>
+
+                    {(role === "admin" || role === "teacher") && (
+                        <button
+                            onClick={async () => {
+                                const confirmed = window.confirm("Are you sure you want to delete this assignment?");
+                                if (!confirmed) return;
+                                try {
+                                    await deleteAssignment(a._id).unwrap();
+                                    toast.success("🗑 Assignment deleted successfully!");
+                                    refetch();
+                                } catch (err) {
+                                    toast.error(err?.data?.message || "❌ Failed to delete assignment");
+                                }
+                            }}
+                            className="ml-auto px-4 py-2 flex items-center gap-2 
+                         bg-gradient-to-r from-red-600 to-red-700 
+                         text-white font-semibold rounded-md shadow-md 
+                         hover:from-red-700 hover:to-red-800 
+                         transition-transform transform hover:scale-105"
+                        >
+                            🗑 <span>Delete</span>
+                        </button>
+                    )}
                 </div>
             ))}
 

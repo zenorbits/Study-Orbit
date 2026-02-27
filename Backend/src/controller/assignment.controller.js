@@ -51,7 +51,7 @@ const deleteAssignment = async (req, res) => {
     try {
         const { id } = req.body;
 
-        const deleteAssignment = await assignmentModel.findByIdAndDelete({ id });
+        const deleteAssignment = await assignmentModel.findByIdAndDelete( id );
 
 
         if (!deleteAssignment) {

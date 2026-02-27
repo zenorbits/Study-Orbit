@@ -12,13 +12,20 @@ export const assignmentApi = createApi({
                 body: { title, description, dueDate },
             })
         }),
-        getAssignment: build.query({
+        getAssignments: build.query({
             query: () => ({
-                url: 'getassignment',
+                url: '/getassignment',
                 method: 'GET'
             })
-        })  
+        }),
+        deleteAssignment: build.mutation({
+            query: (id) => ({
+                url: '/deleteassignment',
+                method: 'DELETE',
+                body: { id }
+            })
+        })
     })
 });
 
-export const { useCreateAssignmentMutation, useGetAssignmentQuery } = assignmentApi;
+export const { useCreateAssignmentMutation, useGetAssignmentsQuery,useDeleteAssignmentMutation } = assignmentApi;
