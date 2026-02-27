@@ -32,4 +32,18 @@ const createAssignment = async (req, res) => {
     }
 };
 
-module.exports = { createAssignment };
+
+const getAssignment = async (req, res) => {
+    try {
+        const assignment = await assignmentModel.find().sort({ createdAt: -1 });
+
+        res.json({
+            success: true,
+            data: assignment
+        })
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
+module.exports = { createAssignment,getAssignment };
