@@ -10,6 +10,7 @@ const deleteUserRoutes = require('./routes/deleteUser.routes');
 const forgotPasswordRoutes = require('./routes/forgotpassword.routes');
 const resetPasswordRoutes = require('./routes/resetpassword.routes');
 const announcementsRoutes = require('./routes/announcements.routes');
+const assignmentRoutes = require('./routes/assignment.routes');
 
 
 dotenv.config();
@@ -69,6 +70,9 @@ app.use('/api/password',resetPasswordRoutes);
 //announcements 
 
 app.use('/api/announcements',announcementsRoutes);
+
+//assignments
+app.use('/api/assignment',assignmentRoutes);
 
 
 module.exports = app;

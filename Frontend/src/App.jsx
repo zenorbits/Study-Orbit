@@ -5,6 +5,7 @@ import ProtectedRoutes from './components/ProtectedRoutes';
 import Lenis from '@studio-freight/lenis';
 import EditProfileForm from './components/EditProfileForm';
 import OTPPage from './components/OTPPage';
+import AssignmentPage from './components/AssignmentPage';
 
 
 // ✅ Lazy load pages for performance
@@ -99,6 +100,7 @@ const App = () => {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="editprofile" element={<EditProfileForm />} />
             <Route path="announcements" element={<AnnouncementPage role={'admin'} />} />
+            <Route path="assignments" element={<AssignmentPage role={'admin'} />} />
           </Route>
 
           {/* Student Routes */}
