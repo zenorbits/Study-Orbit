@@ -1,4 +1,4 @@
-const { createApi, fetchBaseQuery } = require("@reduxjs/toolkit/query/react");
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 
 export const assignmentApi = createApi({
@@ -11,8 +11,14 @@ export const assignmentApi = createApi({
                 method: 'POST',
                 body: { title, description, dueDate },
             })
-        })
+        }),
+        getAssignment: build.query({
+            query: () => ({
+                url: 'getassignment',
+                method: 'GET'
+            })
+        })  
     })
 });
 
-export const { useCreateAssignmentMutation } = assignmentApi;
+export const { useCreateAssignmentMutation, useGetAssignmentQuery } = assignmentApi;

@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
+import {
+    useCreateAssignmentMutation,
+    useGetAssignmentQuery
+} from '../redux/api/assignmentsApi';
+import { toast } from "react-toastify";
 
 const AssignmentPage = ({ role }) => {
     const [showForm, setShowForm] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [dueDate, setDueDate] = useState("");
-    const [createAssignment] = usecreateAss
 
-    const handleSubmit = (e) => {
+    const [createAssignment, { isLoading }] = useCreateAssignmentMutation();
+    const { data, isLoading: loadingAssignments, refetch } = useGetAssignmentQuery();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Later: connect to backend with RTK Query mutation
-        console.log({ title, description, dueDate });
-        setShowForm(false);
-        setTitle("");
-        setDescription("");
-        setDueDate("");
+        try {
+            await createAssignment({ title, description, dueDate }).unwrap();
+            toast.success("✅ Assignment created successfully!");
+            setShowForm(false);
+            setTitle("");
+            setDescription("");
+            setDueDate("");
+            refetch(); // refresh list after creation
+        } catch (error) {
+            toast.error(error?.data?.message || "❌ Failed to create assignment");
+        }
     };
 
     return (
@@ -24,19 +36,29 @@ const AssignmentPage = ({ role }) => {
         dark:from-gray-900 dark:via-black dark:to-emerald-900
         text-gray-900 dark:text-white"
         >
-            <h1 className="text-3xl font-bold mb-8">📚 Assignments</h1>
-
-            {/* Example assignment card */}
-            <div className="border rounded-lg p-6 mb-6 shadow-lg">
-                <h2 className="text-xl font-semibold mb-2">Science Project</h2>
-                <p>Prepare a model of the solar system</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    📅 Due: 5 March 2026
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                    👤 Created by: Teacher A
-                </p>
+            <div className="flex items-center justify-between mb-8">
+                <h1 className="text-3xl font-bold">📚 Assignments</h1>
+                {(role === "admin" || role === "teacher") && (
+                    <button
+                        onClick={refetch}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-md 
+                       hover:bg-blue-700 transition-transform transform hover:scale-105"
+                    >
+                        🔄 Refresh
+                    </button>
+                )}
             </div>
+
+            {loadingAssignments && <p>Loading assignments...</p>}
+            {data?.data?.map((a) => (
+                <div key={a._id} className="border rounded-lg p-6 mb-6 shadow-lg">
+                    <h2 className="text-xl font-semibold mb-2">{a.title}</h2>
+                    <p>{a.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                        📅 Due: {new Date(a.dueDate).toLocaleDateString()}
+                    </p>
+                </div>
+            ))}
 
             {(role === "admin" || role === "teacher") && (
                 <button
@@ -87,10 +109,11 @@ const AssignmentPage = ({ role }) => {
                             />
                             <button
                                 type="submit"
+                                disabled={isLoading}
                                 className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700
-                  dark:bg-emerald-500 dark:hover:bg-emerald-600 transition"
+                  dark:bg-emerald-500 dark:hover:bg-emerald-600 transition disabled:opacity-50"
                             >
-                                Submit
+                                {isLoading ? "Submitting..." : "Submit"}
                             </button>
                         </form>
                     </div>
