@@ -9,11 +9,18 @@ const ManageBatch = () => {
   // Build links based on role
   const basePath = role === "admin" ? "/admin" : "/teacher";
 
+  // Only keep Create and View actions
   const actions = [
-    { title: "➕ Create Batch", description: "Add a new batch for students", link: `${basePath}/createbatch` },
-    { title: "✏️ Edit Batch", description: "Update batch details and information", link: `${basePath}/editbatch` },
-    { title: "🗑 Remove Batch", description: "Delete an existing batch", link: `${basePath}/removebatch` },
-    { title: "🔍 View Batch Details", description: "See batch codes and student info", link: `${basePath}/viewbatch` },
+    { 
+      title: "➕ Create Batch", 
+      description: "Add a new batch for students", 
+      link: `${basePath}/createbatch` 
+    },
+    { 
+      title: "🔍 View Batch Details", 
+      description: "See batch codes and student info", 
+      link: `${basePath}/batch` 
+    },
   ];
 
   useEffect(() => {
@@ -26,7 +33,7 @@ const ManageBatch = () => {
 
   return (
     <div
-      className="w-screen flex items-center justify-center py-16 
+      className="min-h-[80vh] w-screen flex items-center justify-center py-16 
       bg-gradient-to-br from-white via-blue-100 to-blue-500 
       dark:from-gray-900 dark:via-black dark:to-emerald-900"
     >

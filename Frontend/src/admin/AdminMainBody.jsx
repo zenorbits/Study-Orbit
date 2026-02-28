@@ -132,7 +132,7 @@ const AdminMainBody = () => {
               <ClipboardDocumentListIcon className="w-5 h-5 text-purple-400" />
               <span>Manage Batches</span>
             </div>
-            <p className="text-sm opacity-80">Create, edit, or delete batches</p>
+            <p className="text-sm opacity-80">Create or view batches</p>
           </Link>
 
           <Link

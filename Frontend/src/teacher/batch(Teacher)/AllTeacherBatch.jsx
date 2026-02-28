@@ -109,12 +109,6 @@ const AllTeacherBatch = () => {
               {openMenuIndex === index && (
                 <div className="absolute top-8 right-2 bg-white dark:bg-gray-800 border rounded shadow-md z-10">
                   <button
-                    onClick={() => console.log("Edit", batch)}
-                    className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    Edit
-                  </button>
-                  <button
                     onClick={() => handleDelete(batch._id)}
                     className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
