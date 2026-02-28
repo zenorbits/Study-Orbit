@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetBatchForTeacherQuery, useDeleteBatchMutation } from "../../redux/api/batchApi";
+import { Link } from "react-router-dom";
 
 const AllTeacherBatch = () => {
   const theme = useSelector((state) => state.toggleTheme.value);
@@ -83,11 +84,11 @@ const AllTeacherBatch = () => {
           batches.map((batch, index) => (
             <div
               key={batch._id}
-              className="relative h-40 rounded-lg 
+              className="relative h-48 rounded-lg 
                 bg-white/40 dark:bg-black/40 backdrop-blur-md 
                 border border-sky-200 dark:border-emerald-600 
                 shadow-md hover:shadow-xl 
-                flex flex-col items-start justify-center px-4
+                flex flex-col items-start justify-between px-4 py-3
                 text-sky-900 dark:text-emerald-200 
                 hover:brightness-110 
                 transition-transform duration-300"
@@ -96,11 +97,11 @@ const AllTeacherBatch = () => {
               <button
                 onClick={() => toggleMenu(index)}
                 className="absolute top-2 right-2 
-             w-9 h-9 flex items-center justify-center 
-             rounded-full bg-gray-100 dark:bg-gray-700 
-             text-gray-600 dark:text-gray-300 
-             hover:bg-gray-200 dark:hover:bg-gray-600 
-             hover:text-black transition"
+                 w-9 h-9 flex items-center justify-center 
+                 rounded-full bg-gray-100 dark:bg-gray-700 
+                 text-gray-600 dark:text-gray-300 
+                 hover:bg-gray-200 dark:hover:bg-gray-600 
+                 hover:text-black transition"
               >
                 <span className="text-xl font-bold">⋮</span>
               </button>
@@ -117,21 +118,31 @@ const AllTeacherBatch = () => {
                 </div>
               )}
 
-              <h2 className="text-lg font-extrabold mb-1">{batch.batchname}</h2>
-              <p className="text-xs opacity-90">{batch.description}</p>
-              <p className={`text-xs mt-1 ${getStatusColor(batch.status)}`}>
-                <span className="font-semibold">Status:</span> {batch.status}
-              </p>
-              <p className="text-xs text-purple-600 dark:text-purple-400">
-                <span className="font-semibold">Created By:</span>{" "}
-                {batch.createdBy?.name || "Unknown"}
-              </p>
-              <p className="text-xs">
-                <span className="font-semibold">Code:</span>{" "}
-                <span className="text-blue-600 dark:text-blue-400 font-bold">
-                  {batch.code}
-                </span>
-              </p>
+              <div>
+                <h2 className="text-lg font-extrabold mb-1">{batch.batchname}</h2>
+                <p className="text-xs opacity-90">{batch.description}</p>
+                <p className={`text-xs mt-1 ${getStatusColor(batch.status)}`}>
+                  <span className="font-semibold">Status:</span> {batch.status}
+                </p>
+                <p className="text-xs text-purple-600 dark:text-purple-400">
+                  <span className="font-semibold">Created By:</span>{" "}
+                  {batch.createdBy?.name || "Unknown"}
+                </p>
+                <p className="text-xs">
+                  <span className="font-semibold">Code:</span>{" "}
+                  <span className="text-blue-600 dark:text-blue-400 font-bold">
+                    {batch.code}
+                  </span>
+                </p>
+              </div>
+
+              {/* View More button */}
+              <Link
+                to={`/admin/batch/${batch._id}`}
+                className="mt-2 px-3 py-1 bg-sky-600 text-white rounded hover:bg-sky-700 text-xs self-end"
+              >
+                View More
+              </Link>
             </div>
           ))
         )}

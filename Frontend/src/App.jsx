@@ -6,6 +6,7 @@ import Lenis from '@studio-freight/lenis';
 import EditProfileForm from './components/EditProfileForm';
 import OTPPage from './components/OTPPage';
 import AssignmentPage from './components/AssignmentPage';
+import BatchInfoPage from './components/BatchInfoPage';
 
 
 // ✅ Lazy load pages for performance
@@ -101,6 +102,7 @@ const App = () => {
             <Route path="editprofile" element={<EditProfileForm />} />
             <Route path="announcements" element={<AnnouncementPage role={'admin'} />} />
             <Route path="assignments" element={<AssignmentPage role={'admin'} />} />
+            <Route path="batch/:id" element={<BatchInfoPage role={'admin'} />} />
           </Route>
 
           {/* Student Routes */}
