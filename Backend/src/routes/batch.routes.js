@@ -12,5 +12,6 @@ router.get('/verifiedbatches', middleware.authMiddleware, batchController.fetchV
 router.post('/joinbatch', middleware.authMiddleware, batchController.joinBatch);
 router.get('/joinedbatches', middleware.authMiddleware, batchController.fetchJoinedBatch);
 router.delete('/deletebatch/:id', middleware.authMiddleware, middleware.requiredRole(['admin', 'teacher']), batchController.deleteBatch);
+router.get('/:id/students', middleware.authMiddleware, middleware.requiredRole(['admin', 'teacher']), batchController.getBatchStudents);
 
 module.exports = router;

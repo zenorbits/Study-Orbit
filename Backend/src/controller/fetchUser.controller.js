@@ -57,4 +57,6 @@ const fetchProfileInfo = async (req, res) => {
 }
 
 
-module.exports = { fetchStudent, fetchTeacher,fetchProfileInfo };
+
+
+module.exports = { fetchStudent, fetchTeacher, fetchProfileInfo };
