@@ -55,10 +55,16 @@ export const batchApi = createApi({
                 url: `/deletebatch/${id}`,
                 method: 'DELETE'
             })
+        }),
+        getBatchInfo: build.query({
+            query: (id) => ({
+                url: `/${id}/batchinfo`,
+                method:'GET',
+            })
         })
     })
 
 })
 
 
-export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery, useJoinBatchMutation, useFetchJoinedBatchQuery, useDeleteBatchMutation } = batchApi
+export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery, useJoinBatchMutation, useFetchJoinedBatchQuery, useDeleteBatchMutation, useGetBatchInfoQuery } = batchApi

@@ -231,23 +231,30 @@ const getBatchStudents = async (req, res) => {
 }
 
 const getBatchInfo = async (req, res) => {
+  try {
     const { id } = req.params;
-
     const batch = await batchModel.findById(id);
 
     if (!batch) {
-        return res.status(404).json({
-            success: false,
-            message: 'Cannot find batch'
-        })
+      return res.status(404).json({
+        success: false,
+        message: 'Cannot find batch'
+      });
     }
 
     res.json({
-        success: true,
-        message: 'Batch found successfully',
-        data: batch
-    })
-}
+      success: true,
+      message: 'Batch found successfully',
+      data: batch
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
 
 
 module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus, fetchVerifiedBatch, joinBatch, fetchJoinedBatch, deleteBatch, getBatchStudents, getBatchInfo };
