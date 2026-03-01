@@ -59,7 +59,13 @@ export const batchApi = createApi({
         getBatchInfo: build.query({
             query: (id) => ({
                 url: `/${id}/batchinfo`,
-                method:'GET',
+                method: 'GET',
+            })
+        }),
+        getBatchStudent: build.query({
+            query: (id) => ({
+                url: `/${id}/students`,
+                method: 'GET'
             })
         })
     })
@@ -67,4 +73,4 @@ export const batchApi = createApi({
 })
 
 
-export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery, useJoinBatchMutation, useFetchJoinedBatchQuery, useDeleteBatchMutation, useGetBatchInfoQuery } = batchApi
+export const { useBatchCreationMutation, useGetBatchForTeacherQuery, useGetPendingBatchQuery, useUpdateBatchStatusMutation, useGetVerifiedBatchQuery, useJoinBatchMutation, useFetchJoinedBatchQuery, useDeleteBatchMutation, useGetBatchInfoQuery, useGetBatchStudentQuery } = batchApi

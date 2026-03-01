@@ -1,11 +1,17 @@
 import React from "react";
-import { useGetBatchInfoQuery } from "../redux/api/batchApi";
+import { useGetBatchInfoQuery, useGetBatchStudentQuery } from "../redux/api/batchApi";
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const BatchInfoPage = () => {
   const { id } = useParams();
 
   const { data: batchInfo, isLoading, isError } = useGetBatchInfoQuery(id);
+  const { data: students, isLoading: isStudentLoading, isError: isStudentError } = useGetBatchStudentQuery(id);
+
+useEffect(()=>{
+  console.log(students?.students)
+})
 
   // Dummy student data for preview
   const dummyStudents = [
@@ -35,12 +41,12 @@ const BatchInfoPage = () => {
       <div className="flex flex-col md:flex-row justify-between items-start w-11/12 md:w-3/4 mb-8 gap-4">
         {/* Batch details box */}
         <div className="bg-white/40 dark:bg-black/40 backdrop-blur-md rounded-lg shadow-md p-6 flex-1">
-          <h2 className="text-2xl font-bold mb-2">{batchInfo?.batchname}</h2>
-          <p className="mb-2">{batchInfo?.description}</p>
+          <h2 className="text-2xl font-bold mb-2">{batchInfo?.data?.batchname}</h2>
+          <p className="mb-2">{batchInfo?.data?.description}</p>
           <p className="text-sm">
             <span className="font-semibold">Code:</span>{" "}
             <span className="text-blue-600 dark:text-blue-400 font-bold">
-              {batchInfo?.code}
+              {batchInfo?.data?.code}
             </span>
           </p>
         </div>
@@ -82,11 +88,11 @@ const BatchInfoPage = () => {
             </tr>
           </thead>
           <tbody>
-            {dummyStudents.map((student, index) => (
+            {students?.students?.map((student, index) => (
               <tr key={student._id} className="hover:bg-sky-100 dark:hover:bg-gray-700 transition">
                 <td className="border px-2 md:px-4 py-2">{index + 1}</td>
-                <td className="border px-2 md:px-4 py-2">{student.name}</td>
-                <td className="border px-2 md:px-4 py-2">{student.phone}</td>
+                <td className="border px-2 md:px-4 py-2">{student.username}</td>
+                <td className="border px-2 md:px-4 py-2">{student.phoneNumber}</td>
                 <td className="border px-2 md:px-4 py-2">{student.attendance}</td>
                 <td className="border px-2 md:px-4 py-2 text-center">
                   <button className="px-2 md:px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs md:text-sm">

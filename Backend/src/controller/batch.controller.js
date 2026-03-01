@@ -212,7 +212,7 @@ const getBatchStudents = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const batch = await batchModel.findById(id).populate("students", "username phone");
+        const batch = await batchModel.findById(id).populate("students", "username phoneNumber");
 
         if (!batch) {
             return res.status(404).json({
