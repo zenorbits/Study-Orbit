@@ -212,7 +212,7 @@ const getBatchStudents = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const batch = await batchModel.findById(id).populate("students");
+        const batch = await batchModel.findById(id).populate("students", "username phone");
 
         if (!batch) {
             return res.status(404).json({
@@ -230,5 +230,24 @@ const getBatchStudents = async (req, res) => {
     }
 }
 
+const getBatchInfo = async (req, res) => {
+    const { id } = req.params;
 
-module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus, fetchVerifiedBatch, joinBatch, fetchJoinedBatch, deleteBatch,getBatchStudents };
+    const batch = await batchModel.findById(id);
+
+    if (!batch) {
+        return res.status(404).json({
+            success: false,
+            message: 'Cannot find batch'
+        })
+    }
+
+    res.json({
+        success: true,
+        message: 'Batch found successfully',
+        data: batch
+    })
+}
+
+
+module.exports = { createBatch, fetchTeacherBatch, fetchPendingBatch, updateBatchStatus, fetchVerifiedBatch, joinBatch, fetchJoinedBatch, deleteBatch, getBatchStudents, getBatchInfo };

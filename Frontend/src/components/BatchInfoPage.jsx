@@ -13,6 +13,8 @@ const BatchInfoPage = () => {
     ],
   };
 
+  
+
   return (
     <div
       className="min-h-[80vh] w-full flex flex-col items-center py-10
