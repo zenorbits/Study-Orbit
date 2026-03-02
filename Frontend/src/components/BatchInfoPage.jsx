@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useGetBatchInfoQuery, useGetBatchStudentQuery } from "../redux/api/batchApi";
 import { useParams } from "react-router-dom";
 import { useDeleteUserMutation } from "../redux/api/userApi";
+import { useDispatch, useSelector } from "react-redux";
+import { searchFilter } from "../redux/features/searchInputFilter";
 
 const BatchInfoPage = () => {
   const { id } = useParams();
 
   // Fetch batch metadata
   const { data: batchInfo, isLoading, isError } = useGetBatchInfoQuery(id);
+
+  // Redux search filter
+  const inputFilter = useSelector((state) => state.searchFilter.input);
+  const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    console.log(inputFilter);
+  }, [inputFilter]);
 
   // Fetch students
   const {
@@ -19,7 +30,15 @@ const BatchInfoPage = () => {
   // Delete mutation
   const [deleteStudent] = useDeleteUserMutation();
 
-  // Loading/Error states
+  // Handle delete with confirmation
+  const handleDelete = async (studentId) => {
+    const confirmed = window.confirm("Are you sure you want to delete this student?");
+    if (confirmed) {
+      await deleteStudent(studentId);
+    }
+  };
+
+  // Full-screen loading/error states
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen w-screen bg-gradient-to-br from-white via-blue-100 to-blue-500 dark:from-gray-900 dark:via-black dark:to-emerald-900">
@@ -55,13 +74,18 @@ const BatchInfoPage = () => {
       </div>
     );
   }
-  // Handle delete with confirmation
-  const handleDelete = async (studentId) => {
-    const confirmed = window.confirm("Are you sure you want to delete this student?");
-    if (confirmed) {
-      await deleteStudent(studentId);
-    }
-  };
+
+  // Apply search filter to students
+  const studentList = students?.students || [];
+  const filteredStudents = studentList.filter((student) => {
+    const searchTerm = inputFilter.toLowerCase();
+    return (
+      (student.username && student.username.toLowerCase().includes(searchTerm)) ||
+      (student.name && student.name.toLowerCase().includes(searchTerm)) ||
+      (student.phoneNumber && student.phoneNumber.toLowerCase().includes(searchTerm)) ||
+      (student.phone && student.phone.toLowerCase().includes(searchTerm))
+    );
+  });
 
   return (
     <div
@@ -113,6 +137,11 @@ const BatchInfoPage = () => {
           <h2 className="text-xl font-bold">👩‍🎓 Students</h2>
           <input
             type="text"
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              dispatch(searchFilter(e.target.value));
+            }}
+            value={inputValue}
             placeholder="Search students..."
             className="w-full md:w-1/3 px-3 py-2 border border-gray-300 dark:border-gray-600 
                        rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 
@@ -120,8 +149,10 @@ const BatchInfoPage = () => {
           />
         </div>
 
-        {students?.students?.length === 0 ? (
-          <p className="text-center text-gray-600 dark:text-gray-300">No students currently</p>
+        {filteredStudents.length === 0 ? (
+          <p className="text-center text-gray-600 dark:text-gray-300 py-6">
+            No students currently
+          </p>
         ) : (
           <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600 text-sm md:text-base">
             <thead>
@@ -134,7 +165,7 @@ const BatchInfoPage = () => {
               </tr>
             </thead>
             <tbody>
-              {students?.students?.map((student, index) => (
+              {filteredStudents.map((student, index) => (
                 <tr key={student._id} className="hover:bg-sky-100 dark:hover:bg-gray-700 transition">
                   <td className="border px-2 md:px-4 py-2">{index + 1}</td>
                   <td className="border px-2 md:px-4 py-2">{student.username || student.name}</td>
