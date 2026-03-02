@@ -1,32 +1,67 @@
 import React from "react";
 import { useGetBatchInfoQuery, useGetBatchStudentQuery } from "../redux/api/batchApi";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useDeleteUserMutation } from "../redux/api/userApi";
 
 const BatchInfoPage = () => {
   const { id } = useParams();
 
+  // Fetch batch metadata
   const { data: batchInfo, isLoading, isError } = useGetBatchInfoQuery(id);
-  const { data: students, isLoading: isStudentLoading, isError: isStudentError } = useGetBatchStudentQuery(id);
 
-useEffect(()=>{
-  console.log(students?.students)
-})
+  // Fetch students
+  const {
+    data: students,
+    isLoading: isStudentLoading,
+    isError: isStudentError,
+  } = useGetBatchStudentQuery(id);
 
-  // Dummy student data for preview
-  const dummyStudents = [
-    { _id: 1, name: "Alice Johnson", phone: "+91 9876543210", attendance: "Present" },
-    { _id: 2, name: "Bob Smith", phone: "+91 9123456789", attendance: "Absent" },
-    { _id: 3, name: "Charlie Brown", phone: "+91 9988776655", attendance: "Present" },
-  ];
+  // Delete mutation
+  const [deleteStudent] = useDeleteUserMutation();
 
+  // Loading/Error states
   if (isLoading) {
-    return <p className="text-center mt-10">Loading batch info...</p>;
+    return (
+      <div className="flex items-center justify-center h-screen w-screen bg-gradient-to-br from-white via-blue-100 to-blue-500 dark:from-gray-900 dark:via-black dark:to-emerald-900">
+        <p className="text-2xl font-semibold text-gray-900 dark:text-white animate-pulse">
+          📘 Loading batch info...
+        </p>
+      </div>
+    );
   }
 
   if (isError) {
-    return <p className="text-center mt-10 text-red-600">Error fetching batch info</p>;
+    return (
+      <div className="flex items-center justify-center h-screen w-screen">
+        <p className="text-2xl font-semibold text-red-600">❌ Error fetching batch info</p>
+      </div>
+    );
   }
+
+  if (isStudentLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen w-screen bg-gradient-to-br from-white via-blue-100 to-blue-500 dark:from-gray-900 dark:via-black dark:to-emerald-900">
+        <p className="text-2xl font-semibold text-gray-900 dark:text-white animate-pulse">
+          👩‍🎓 Loading students...
+        </p>
+      </div>
+    );
+  }
+
+  if (isStudentError) {
+    return (
+      <div className="flex items-center justify-center h-screen w-screen">
+        <p className="text-2xl font-semibold text-red-600">❌ Error fetching students</p>
+      </div>
+    );
+  }
+  // Handle delete with confirmation
+  const handleDelete = async (studentId) => {
+    const confirmed = window.confirm("Are you sure you want to delete this student?");
+    if (confirmed) {
+      await deleteStudent(studentId);
+    }
+  };
 
   return (
     <div
@@ -49,6 +84,14 @@ useEffect(()=>{
               {batchInfo?.data?.code}
             </span>
           </p>
+          <p className="text-sm mt-2">
+            <span className="font-semibold">Status:</span>{" "}
+            <span className="capitalize">{batchInfo?.data?.status}</span>
+          </p>
+          <p className="text-sm mt-2">
+            <span className="font-semibold">Created At:</span>{" "}
+            {new Date(batchInfo?.data?.createdAt).toLocaleDateString()}
+          </p>
         </div>
 
         {/* Attendance button */}
@@ -64,7 +107,7 @@ useEffect(()=>{
         </button>
       </div>
 
-      {/* Students section (dummy data for now) */}
+      {/* Students section */}
       <div className="w-11/12 md:w-3/4 overflow-x-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
           <h2 className="text-xl font-bold">👩‍🎓 Students</h2>
@@ -77,32 +120,39 @@ useEffect(()=>{
           />
         </div>
 
-        <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600 text-sm md:text-base">
-          <thead>
-            <tr className="bg-sky-200 dark:bg-emerald-700 text-gray-900 dark:text-white">
-              <th className="border px-2 md:px-4 py-2">#</th>
-              <th className="border px-2 md:px-4 py-2">Name</th>
-              <th className="border px-2 md:px-4 py-2">Phone Number</th>
-              <th className="border px-2 md:px-4 py-2">Attendance</th>
-              <th className="border px-2 md:px-4 py-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students?.students?.map((student, index) => (
-              <tr key={student._id} className="hover:bg-sky-100 dark:hover:bg-gray-700 transition">
-                <td className="border px-2 md:px-4 py-2">{index + 1}</td>
-                <td className="border px-2 md:px-4 py-2">{student.username}</td>
-                <td className="border px-2 md:px-4 py-2">{student.phoneNumber}</td>
-                <td className="border px-2 md:px-4 py-2">{student.attendance}</td>
-                <td className="border px-2 md:px-4 py-2 text-center">
-                  <button className="px-2 md:px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs md:text-sm">
-                    Delete
-                  </button>
-                </td>
+        {students?.students?.length === 0 ? (
+          <p className="text-center text-gray-600 dark:text-gray-300">No students currently</p>
+        ) : (
+          <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600 text-sm md:text-base">
+            <thead>
+              <tr className="bg-sky-200 dark:bg-emerald-700 text-gray-900 dark:text-white">
+                <th className="border px-2 md:px-4 py-2">#</th>
+                <th className="border px-2 md:px-4 py-2">Name</th>
+                <th className="border px-2 md:px-4 py-2">Phone Number</th>
+                <th className="border px-2 md:px-4 py-2">Attendance</th>
+                <th className="border px-2 md:px-4 py-2">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {students?.students?.map((student, index) => (
+                <tr key={student._id} className="hover:bg-sky-100 dark:hover:bg-gray-700 transition">
+                  <td className="border px-2 md:px-4 py-2">{index + 1}</td>
+                  <td className="border px-2 md:px-4 py-2">{student.username || student.name}</td>
+                  <td className="border px-2 md:px-4 py-2">{student.phoneNumber || student.phone}</td>
+                  <td className="border px-2 md:px-4 py-2">{student.attendance}</td>
+                  <td className="border px-2 md:px-4 py-2 text-center">
+                    <button
+                      onClick={() => handleDelete(student._id)}
+                      className="px-2 md:px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs md:text-sm"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
