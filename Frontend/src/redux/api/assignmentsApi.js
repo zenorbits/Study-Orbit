@@ -7,7 +7,7 @@ export const assignmentApi = createApi({
     endpoints: (build) => ({
         createAssignment: build.mutation({
             query: ({ title, description, dueDate, batchId }) => ({
-                url: `/${id}/createAssignment`,
+                url: `/${batchId}/createAssignment`,
                 method: 'POST',
                 body: { title, description, dueDate, batchId },
             })
