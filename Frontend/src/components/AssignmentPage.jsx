@@ -1,50 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     useCreateAssignmentMutation,
     useGetAssignmentsQuery,
     useDeleteAssignmentMutation
 } from '../redux/api/assignmentsApi';
 import { toast } from "react-toastify";
+import { useGetVerifiedBatchQuery } from '../redux/api/batchApi';
 
 const AssignmentPage = ({ role }) => {
     const [showForm, setShowForm] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [dueDate, setDueDate] = useState("");
+    const [selectedBatchId, setSelectedBatchId] = useState("");
+
+    // Get all verified batches for the user
+    const { data: batchData } = useGetVerifiedBatchQuery();
+    const verifiedBatches = batchData?.batches || [];
+
+    // Default to the first batch if available
+    useEffect(() => {
+        if (verifiedBatches.length > 0 && !selectedBatchId) {
+            setSelectedBatchId(verifiedBatches[0]._id);
+        }
+    }, [verifiedBatches, selectedBatchId]);
 
     const [createAssignment, { isLoading }] = useCreateAssignmentMutation();
-    const { data, isLoading: loadingAssignments, refetch } = useGetAssignmentsQuery();
+    const { data, isLoading: loadingAssignments, refetch } = useGetAssignmentsQuery(selectedBatchId, {
+        skip: !selectedBatchId
+    });
     const [deleteAssignment] = useDeleteAssignmentMutation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await createAssignment({ title, description, dueDate }).unwrap();
+            await createAssignment({ batchId: selectedBatchId, title, description, dueDate }).unwrap();
             toast.success("✅ Assignment created successfully!");
             setShowForm(false);
             setTitle("");
             setDescription("");
             setDueDate("");
-            refetch(); // refresh list after creation
+            refetch();
         } catch (error) {
             toast.error(error?.data?.message || "❌ Failed to create assignment");
         }
     };
 
     return (
-        <div
-            className="min-h-[80vh] w-full font-mono p-10
-        bg-gradient-to-br from-white via-blue-100 to-blue-500
-        dark:from-gray-900 dark:via-black dark:to-emerald-900
-        text-gray-900 dark:text-white"
-        >
+        <div className="min-h-[80vh] w-full font-mono p-10
+      bg-gradient-to-br from-white via-blue-100 to-blue-500
+      dark:from-gray-900 dark:via-black dark:to-emerald-900
+      text-gray-900 dark:text-white">
+
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-3xl font-bold">📚 Assignments</h1>
                 {(role === "admin" || role === "teacher") && (
                     <button
                         onClick={refetch}
                         className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-md 
-                       hover:bg-blue-700 transition-transform transform hover:scale-105"
+            hover:bg-blue-700 transition-transform transform hover:scale-105"
                     >
                         🔄 Refresh
                     </button>
@@ -52,6 +66,7 @@ const AssignmentPage = ({ role }) => {
             </div>
 
             {loadingAssignments && <p>Loading assignments...</p>}
+            {data?.data?.length === 0 && <p>No assignments for this batch</p>}
             {data?.data?.map((a) => (
                 <div key={a._id} className="border rounded-lg p-6 mb-6 shadow-lg flex items-center justify-between">
                     <div>
@@ -79,10 +94,10 @@ const AssignmentPage = ({ role }) => {
                                 }
                             }}
                             className="ml-auto px-4 py-2 flex items-center gap-2 
-                         bg-gradient-to-r from-red-600 to-red-700 
-                         text-white font-semibold rounded-md shadow-md 
-                         hover:from-red-700 hover:to-red-800 
-                         transition-transform transform hover:scale-105"
+              bg-gradient-to-r from-red-600 to-red-700 
+              text-white font-semibold rounded-md shadow-md 
+              hover:from-red-700 hover:to-red-800 
+              transition-transform transform hover:scale-105"
                         >
                             🗑 <span>Delete</span>
                         </button>
@@ -94,8 +109,8 @@ const AssignmentPage = ({ role }) => {
                 <button
                     onClick={() => setShowForm(true)}
                     className="mt-6 px-5 py-2 bg-emerald-600 text-white rounded-md
-            hover:bg-emerald-700 transition shadow-md
-            dark:bg-emerald-500 dark:hover:bg-emerald-600"
+          hover:bg-emerald-700 transition shadow-md
+          dark:bg-emerald-500 dark:hover:bg-emerald-600"
                 >
                     ➕ Add Assignment
                 </button>
@@ -114,13 +129,29 @@ const AssignmentPage = ({ role }) => {
                         <h2 className="text-2xl font-bold mb-4">Add New Assignment</h2>
 
                         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+                            {/* Batch selector inside the form */}
+                            {verifiedBatches.length > 0 && (
+                                <select
+                                    value={selectedBatchId}
+                                    onChange={(e) => setSelectedBatchId(e.target.value)}
+                                    className="p-2 rounded-md border border-gray-300 dark:border-gray-600
+                    bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                                >
+                                    {verifiedBatches.map((b) => (
+                                        <option key={b._id} value={b._id}>
+                                            {b.batchname}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
+
                             <input
                                 type="text"
                                 placeholder="Title"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 className="p-2 rounded-md border border-gray-300 dark:border-gray-600
-                  bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
                             />
                             <textarea
                                 placeholder="Description"
@@ -128,20 +159,20 @@ const AssignmentPage = ({ role }) => {
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 className="p-2 rounded-md border border-gray-300 dark:border-gray-600
-                  bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
                             ></textarea>
                             <input
                                 type="date"
                                 value={dueDate}
                                 onChange={(e) => setDueDate(e.target.value)}
                                 className="p-2 rounded-md border border-gray-300 dark:border-gray-600
-                  bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
                             />
                             <button
                                 type="submit"
                                 disabled={isLoading}
                                 className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700
-                  dark:bg-emerald-500 dark:hover:bg-emerald-600 transition disabled:opacity-50"
+                dark:bg-emerald-500 dark:hover:bg-emerald-600 transition disabled:opacity-50"
                             >
                                 {isLoading ? "Submitting..." : "Submit"}
                             </button>

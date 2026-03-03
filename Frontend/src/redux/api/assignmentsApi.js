@@ -6,10 +6,10 @@ export const assignmentApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: 'https://study-orbit-backend.onrender.com/api/assignment', credentials: 'include' }),
     endpoints: (build) => ({
         createAssignment: build.mutation({
-            query: ({ title, description, dueDate }) => ({
-                url: '/createAssignment',
+            query: ({ title, description, dueDate, batchId }) => ({
+                url: `/${id}/createAssignment`,
                 method: 'POST',
-                body: { title, description, dueDate },
+                body: { title, description, dueDate, batchId },
             })
         }),
         getAssignments: build.query({
@@ -28,4 +28,4 @@ export const assignmentApi = createApi({
     })
 });
 
-export const { useCreateAssignmentMutation, useGetAssignmentsQuery,useDeleteAssignmentMutation } = assignmentApi;
+export const { useCreateAssignmentMutation, useGetAssignmentsQuery, useDeleteAssignmentMutation } = assignmentApi;

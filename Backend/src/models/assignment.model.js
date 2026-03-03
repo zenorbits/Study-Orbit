@@ -13,6 +13,11 @@ const assignmentSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'User'
     },
+    batch:{
+        type:mongoose.Schema.ObjectId,
+        ref:'Batch',
+        required:true
+    },
     dueDate: {
         type: Date,
         required: true

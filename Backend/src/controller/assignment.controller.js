@@ -2,6 +2,8 @@ const assignmentModel = require('../models/assignment.model');
 
 const createAssignment = async (req, res) => {
     try {
+
+        const { id } = req.params;
         const { title, description, dueDate } = req.body;
 
         if (!title || !description || !dueDate) {
@@ -15,6 +17,7 @@ const createAssignment = async (req, res) => {
             title,
             description,
             dueDate,
+            batch: id,
             createdBy: req.user?._id // if you’re using auth middleware
         });
 
@@ -51,7 +54,7 @@ const deleteAssignment = async (req, res) => {
     try {
         const { id } = req.body;
 
-        const deleteAssignment = await assignmentModel.findByIdAndDelete( id );
+        const deleteAssignment = await assignmentModel.findByIdAndDelete(id);
 
 
         if (!deleteAssignment) {
@@ -66,4 +69,4 @@ const deleteAssignment = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 }
-module.exports = { createAssignment, getAssignment,deleteAssignment };
+module.exports = { createAssignment, getAssignment, deleteAssignment };
