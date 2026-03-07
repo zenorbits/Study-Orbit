@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useGetBatchInfoQuery, useGetBatchStudentQuery } from "../redux/api/batchApi";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDeleteUserMutation } from "../redux/api/userApi";
 import { useDispatch, useSelector } from "react-redux";
 import { searchFilter } from "../redux/features/searchInputFilter";
@@ -119,7 +119,7 @@ const BatchInfoPage = () => {
         </div>
 
         {/* Attendance button */}
-        <button
+        <Link to='/admin/attendance'
           className="px-6 py-2 
                      bg-sky-600 hover:bg-sky-700 
                      dark:bg-emerald-600 dark:hover:bg-emerald-700 
@@ -128,7 +128,7 @@ const BatchInfoPage = () => {
                      h-fit self-start md:self-center"
         >
           ✅ Take Today's Attendance
-        </button>
+        </Link>
       </div>
 
       {/* Students section */}

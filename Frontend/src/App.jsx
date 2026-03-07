@@ -7,6 +7,7 @@ import EditProfileForm from './components/EditProfileForm';
 import OTPPage from './components/OTPPage';
 import AssignmentPage from './components/AssignmentPage';
 import BatchInfoPage from './components/BatchInfoPage';
+import AttendancePage from './components/AttendancePage';
 
 
 // ✅ Lazy load pages for performance
@@ -103,6 +104,7 @@ const App = () => {
             <Route path="announcements" element={<AnnouncementPage role={'admin'} />} />
             <Route path="assignments" element={<AssignmentPage role={'admin'} />} />
             <Route path="batch/:id" element={<BatchInfoPage role={'admin'} />} />
+            <Route path='attendance' element={<AttendancePage/>}  />
           </Route>
 
           {/* Student Routes */}
