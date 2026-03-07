@@ -11,7 +11,7 @@ const forgotPasswordRoutes = require('./routes/forgotpassword.routes');
 const resetPasswordRoutes = require('./routes/resetpassword.routes');
 const announcementsRoutes = require('./routes/announcements.routes');
 const assignmentRoutes = require('./routes/assignment.routes');
-
+const attendanceRoutes = require('./routes/attendance.routes');
 
 dotenv.config();
 const app = express();
@@ -65,14 +65,16 @@ app.use('/api/user', deleteUserRoutes);
 
 app.use('/api/password', forgotPasswordRoutes);
 
-app.use('/api/password',resetPasswordRoutes);
+app.use('/api/password', resetPasswordRoutes);
 
 //announcements 
 
-app.use('/api/announcements',announcementsRoutes);
+app.use('/api/announcements', announcementsRoutes);
 
 //assignments
-app.use('/api/assignment',assignmentRoutes);
+app.use('/api/assignment', assignmentRoutes);
 
+//attendance
+app.use('/api/attendance', attendanceRoutes);
 
 module.exports = app;
