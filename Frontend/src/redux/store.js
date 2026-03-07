@@ -11,6 +11,7 @@ import { otpApi } from './api/otpApi'
 import { resetPasswordApi } from './api/resetpasswordApi'
 import { announcementApi } from './api/announcementsApi'
 import { assignmentApi } from './api/assignmentsApi'
+import { attendanceApi } from './api/attendanceApi'
 
 
 
@@ -27,9 +28,10 @@ export const store = configureStore({
         [otpApi.reducerPath]: otpApi.reducer,
         [resetPasswordApi.reducerPath]: resetPasswordApi.reducer,
         [announcementApi.reducerPath]: announcementApi.reducer,
-        [assignmentApi.reducerPath]: assignmentApi.reducer
+        [assignmentApi.reducerPath]: assignmentApi.reducer,
+        [attendanceApi.reducerPath]: attendanceApi.reducer
     },
 
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(authApi.middleware, batchApi.middleware, userApi.middleware, profileSettingApi.middleware, otpApi.middleware, resetPasswordApi.middleware, announcementApi.middleware, assignmentApi.middleware)
+        getDefaultMiddleware().concat(authApi.middleware, batchApi.middleware, userApi.middleware, profileSettingApi.middleware, otpApi.middleware, resetPasswordApi.middleware, announcementApi.middleware, assignmentApi.middleware, attendanceApi.middleware)
 })
