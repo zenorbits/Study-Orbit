@@ -8,10 +8,10 @@ export const attendanceApi = createApi({
   }),
   endpoints: (build) => ({
     markAttendance: build.mutation({
-      query: ({ batchId, records }) => ({
-        url: `/batch/${batchId}`,   // ✅ matches backend route
+      query: ({ batchId, records, date }) => ({
+        url: `/batch/${batchId}`,
         method: "POST",
-        body: { records }           // ✅ send array of { studentId, status }
+        body: { records, date }   // ✅ include date
       })
     }),
     getStudentAttendance: build.query({

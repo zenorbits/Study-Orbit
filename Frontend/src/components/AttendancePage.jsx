@@ -9,6 +9,10 @@ const AttendancePage = () => {
 
   const [selectedBatchId, setSelectedBatchId] = useState("");
   const [attendanceRecords, setAttendanceRecords] = useState({});
+  const [attendanceDate, setAttendanceDate] = useState(
+    new Date().toISOString().split("T")[0] // default to today
+  );
+
   const [markAttendance, { isLoading: submitting }] = useMarkAttendanceMutation();
 
   // Default to first batch
@@ -52,7 +56,7 @@ const AttendancePage = () => {
         status,
       }));
 
-      await markAttendance({ batchId: selectedBatchId, records }).unwrap();
+      await markAttendance({ batchId: selectedBatchId, records, date: attendanceDate }).unwrap();
       toast.success("✅ Attendance marked successfully!");
     } catch (error) {
       toast.error(error?.data?.message || "❌ Failed to mark attendance");
@@ -90,6 +94,18 @@ const AttendancePage = () => {
           </select>
         </div>
       )}
+
+      {/* Date selector */}
+      <div className="mb-6">
+        <label className="block mb-2 font-semibold">Select Date:</label>
+        <input
+          type="date"
+          value={attendanceDate}
+          onChange={(e) => setAttendanceDate(e.target.value)}
+          className="p-2 rounded-md border border-gray-300 dark:border-gray-600
+            bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+        />
+      </div>
 
       {/* Student checklist */}
       {students.length > 0 ? (

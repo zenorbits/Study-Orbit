@@ -4,17 +4,16 @@ const Attendance = require('../models/attendance.model');
 const markAttendance = async (req, res) => {
     try {
         const { batchId } = req.params;
-        const { records } = req.body; // array of { studentId, status }
+        const { records, date } = req.body;
 
-        // Normalize today's date (midnight)
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        // If date is provided, use it; otherwise default to today
+        const attendanceDate = date ? new Date(date) : new Date();
+        attendanceDate.setHours(0, 0, 0, 0);
 
-        // Save attendance for each student
         const saved = await Promise.all(
             records.map(r =>
                 Attendance.findOneAndUpdate(
-                    { student: r.studentId, batch: batchId, date: today },
+                    { student: r.studentId, batch: batchId, date: attendanceDate },
                     { status: r.status },
                     { upsert: true, new: true }
                 )
@@ -23,11 +22,9 @@ const markAttendance = async (req, res) => {
 
         res.json({ success: true, data: saved });
     } catch (error) {
-        console.error("Error marking attendance:", error);
         res.status(500).json({ success: false, message: "Failed to mark attendance" });
     }
 };
-
 const getAttendance = async (req, res) => {
     const records = await Attendance.find({ student: req.params.studentId });
     const totalDays = records.length;
@@ -36,4 +33,4 @@ const getAttendance = async (req, res) => {
     res.json({ success: true, percentage });
 }
 
-module.exports = {markAttendance,getAttendance}
+module.exports = { markAttendance, getAttendance }
