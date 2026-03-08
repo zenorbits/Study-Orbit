@@ -152,16 +152,13 @@ const ProfilePage = () => {
       </div>
 
       {/* Options */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-11/12 md:w-4/5 mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-11/12 md:w-4/5 mx-auto">
         <Link
           to={editProfileRoute}
           className="flex items-center justify-center py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-sky-400 hover:shadow-sky-300 transition"
         >
           ✏️ Edit Profile
         </Link>
-        <button className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-yellow-400 hover:shadow-yellow-300 transition">
-          🔒 Change Password
-        </button>
         <button
           onClick={handleLogout}
           className="py-3 rounded-lg bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-100 font-semibold shadow-md border border-red-400 hover:shadow-red-300 transition"

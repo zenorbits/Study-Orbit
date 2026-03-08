@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const AllTeacherBatch = () => {
   const theme = useSelector((state) => state.toggleTheme.value);
+  const role = useSelector((state) => state.auth?.user?.role); // assuming you store role in auth slice
 
   const { data, isLoading, isError, refetch } = useGetBatchForTeacherQuery(undefined, {
     pollingInterval: 30000,
@@ -138,7 +139,11 @@ const AllTeacherBatch = () => {
 
               {/* View More button */}
               <Link
-                to={`/admin/batch/${batch._id}`}
+                to={
+                  role === "admin"
+                    ? `/admin/batch/${batch._id}`
+                    : `/teacher/batch/${batch._id}`
+                }
                 className="mt-2 px-3 py-1 bg-sky-600 text-white rounded hover:bg-sky-700 text-xs self-end"
               >
                 View More

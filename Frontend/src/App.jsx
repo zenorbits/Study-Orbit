@@ -85,6 +85,10 @@ const App = () => {
             <Route path="batch" element={<AllTeacherBatch />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="editprofile" element={<EditProfileForm />} />
+            <Route path="announcements" element={<AnnouncementPage role={'teacher'} />} />
+            <Route path="assignments" element={<AssignmentPage role={'teacher'} />} />
+            <Route path="batch/:id" element={<BatchInfoPage role={'teacher'} />} />
+             <Route path='attendance' element={<AttendancePage />} />
           </Route>
 
           {/* Admin Routes */}
@@ -104,7 +108,7 @@ const App = () => {
             <Route path="announcements" element={<AnnouncementPage role={'admin'} />} />
             <Route path="assignments" element={<AssignmentPage role={'admin'} />} />
             <Route path="batch/:id" element={<BatchInfoPage role={'admin'} />} />
-            <Route path='attendance' element={<AttendancePage/>}  />
+            <Route path='attendance' element={<AttendancePage />} />
           </Route>
 
           {/* Student Routes */}
@@ -119,6 +123,7 @@ const App = () => {
             <Route path="batch" element={<AllTeacherBatch />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="editprofile" element={<EditProfileForm />} />
+            <Route path="announcements" element={<AnnouncementPage />} />
           </Route>
 
           {/* 404 Fallback */}

@@ -29,6 +29,7 @@ const AttendancePercentage = ({ studentId }) => {
 
 const BatchInfoPage = () => {
   const { id } = useParams();
+  const role = useSelector((state) => state.auth?.user?.role); // role from Redux
 
   // Fetch batch metadata
   const { data: batchInfo, isLoading, isError } = useGetBatchInfoQuery(id);
@@ -52,15 +53,13 @@ const BatchInfoPage = () => {
   // Delete mutation
   const [deleteStudent] = useDeleteUserMutation();
 
-  // Handle delete with confirmation
+  // Handle delete with confirmation (only for admin)
   const handleDelete = async (studentId) => {
     const confirmed = window.confirm("Are you sure you want to delete this student?");
     if (confirmed) {
       await deleteStudent(studentId);
     }
   };
-
-
   // Full-screen loading/error states
   if (isLoading) {
     return (
@@ -143,9 +142,9 @@ const BatchInfoPage = () => {
           </p>
         </div>
 
-        {/* Attendance button */}
+        {/* Attendance button (role-aware) */}
         <Link
-          to="/admin/attendance"
+          to={role === "admin" ? "/admin/attendance" : `/teacher/attendance`}
           className="px-6 py-2 
                      bg-sky-600 hover:bg-sky-700 
                      dark:bg-emerald-600 dark:hover:bg-emerald-700 
@@ -156,7 +155,6 @@ const BatchInfoPage = () => {
           ✅ Take Today's Attendance
         </Link>
       </div>
-
       {/* Students section */}
       <div className="w-11/12 md:w-3/4 overflow-x-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
@@ -187,7 +185,7 @@ const BatchInfoPage = () => {
                 <th className="border px-2 md:px-4 py-2">Name</th>
                 <th className="border px-2 md:px-4 py-2">Phone Number</th>
                 <th className="border px-2 md:px-4 py-2">Attendance</th>
-                <th className="border px-2 md:px-4 py-2">Action</th>
+                {role === "admin" && <th className="border px-2 md:px-4 py-2">Action</th>}
               </tr>
             </thead>
             <tbody>
@@ -199,14 +197,16 @@ const BatchInfoPage = () => {
                   <td className="border px-2 md:px-4 py-2">
                     <AttendancePercentage studentId={student._id} />
                   </td>
-                  <td className="border px-2 md:px-4 py-2 text-center">
-                    <button
-                      onClick={() => handleDelete(student._id)}
-                      className="px-2 md:px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs md:text-sm"
-                    >
-                      Delete
-                    </button>
-                  </td>
+                  {role === "admin" && (
+                    <td className="border px-2 md:px-4 py-2 text-center">
+                      <button
+                        onClick={() => handleDelete(student._id)}
+                        className="px-2 md:px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs md:text-sm"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
