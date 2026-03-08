@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useGetVerifiedBatchQuery, useGetBatchStudentQuery } from "../redux/api/batchApi";
 import { useMarkAttendanceMutation } from "../redux/api/attendanceApi";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const AttendancePage = () => {
+  const navigate = useNavigate();
+
   const { data: batchData, isLoading, isError } = useGetVerifiedBatchQuery();
   const verifiedBatches = batchData?.batches || [];
 
@@ -58,15 +61,31 @@ const AttendancePage = () => {
 
       await markAttendance({ batchId: selectedBatchId, records, date: attendanceDate }).unwrap();
       toast.success("✅ Attendance marked successfully!");
+
+      // Navigate back to batch info page
+      navigate(`/admin/batch/${selectedBatchId}`);
     } catch (error) {
       toast.error(error?.data?.message || "❌ Failed to mark attendance");
     }
   };
 
-  if (isLoading) return <p>Loading batches...</p>;
-  if (isError) return <p>Error fetching batches</p>;
-  if (loadingStudents) return <p>Loading students...</p>;
-  if (studentError) return <p>Error fetching students</p>;
+  if (isLoading || loadingStudents || submitting) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen w-screen
+      bg-gradient-to-br from-white via-green-100 to-green-500
+      dark:from-gray-900 dark:via-black dark:to-emerald-900
+      text-gray-900 dark:text-white">
+
+        {/* Spinner */}
+        <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-6"></div>
+
+        {/* Message */}
+        <p className="text-2xl font-semibold animate-pulse">
+          {submitting ? "Submitting attendance..." : "Loading attendance data..."}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[80vh] w-full font-mono p-10

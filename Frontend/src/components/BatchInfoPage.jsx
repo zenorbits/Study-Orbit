@@ -4,6 +4,28 @@ import { Link, useParams } from "react-router-dom";
 import { useDeleteUserMutation } from "../redux/api/userApi";
 import { useDispatch, useSelector } from "react-redux";
 import { searchFilter } from "../redux/features/searchInputFilter";
+import { useGetStudentAttendanceQuery } from "../redux/api/attendanceApi";
+
+// Component to show attendance percentage with hover details
+const AttendancePercentage = ({ studentId }) => {
+  const { data, isLoading, isError } = useGetStudentAttendanceQuery(studentId);
+
+  if (isLoading) return <span className="text-gray-500">Loading...</span>;
+  if (isError) return <span className="text-red-500">Error</span>;
+
+  const percentage = data?.percentage?.toFixed(1);
+  const presentDays = data?.presentDays || 0;
+  const totalDays = data?.totalDays || 0;
+
+  return (
+    <span
+      className="font-semibold text-emerald-600 dark:text-emerald-400 cursor-help"
+      title={`${presentDays}/${totalDays} days present`}
+    >
+      {percentage}%
+    </span>
+  );
+};
 
 const BatchInfoPage = () => {
   const { id } = useParams();
@@ -38,10 +60,12 @@ const BatchInfoPage = () => {
     }
   };
 
+
   // Full-screen loading/error states
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen w-screen bg-gradient-to-br from-white via-blue-100 to-blue-500 dark:from-gray-900 dark:via-black dark:to-emerald-900">
+        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mr-4"></div>
         <p className="text-2xl font-semibold text-gray-900 dark:text-white animate-pulse">
           📘 Loading batch info...
         </p>
@@ -60,6 +84,7 @@ const BatchInfoPage = () => {
   if (isStudentLoading) {
     return (
       <div className="flex items-center justify-center h-screen w-screen bg-gradient-to-br from-white via-blue-100 to-blue-500 dark:from-gray-900 dark:via-black dark:to-emerald-900">
+        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mr-4"></div>
         <p className="text-2xl font-semibold text-gray-900 dark:text-white animate-pulse">
           👩‍🎓 Loading students...
         </p>
@@ -119,7 +144,8 @@ const BatchInfoPage = () => {
         </div>
 
         {/* Attendance button */}
-        <Link to='/admin/attendance'
+        <Link
+          to="/admin/attendance"
           className="px-6 py-2 
                      bg-sky-600 hover:bg-sky-700 
                      dark:bg-emerald-600 dark:hover:bg-emerald-700 
@@ -170,7 +196,9 @@ const BatchInfoPage = () => {
                   <td className="border px-2 md:px-4 py-2">{index + 1}</td>
                   <td className="border px-2 md:px-4 py-2">{student.username || student.name}</td>
                   <td className="border px-2 md:px-4 py-2">{student.phoneNumber || student.phone}</td>
-                  <td className="border px-2 md:px-4 py-2">{student.attendance}</td>
+                  <td className="border px-2 md:px-4 py-2">
+                    <AttendancePercentage studentId={student._id} />
+                  </td>
                   <td className="border px-2 md:px-4 py-2 text-center">
                     <button
                       onClick={() => handleDelete(student._id)}
