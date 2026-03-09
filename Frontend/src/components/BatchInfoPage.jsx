@@ -29,7 +29,7 @@ const AttendancePercentage = ({ studentId }) => {
 
 const BatchInfoPage = () => {
   const { id } = useParams();
-  const role = useSelector((state) => state.auth?.user?.role); // role from Redux
+  const role = localStorage.getItem('role'); // role from Redux
 
   // Fetch batch metadata
   const { data: batchInfo, isLoading, isError } = useGetBatchInfoQuery(id);

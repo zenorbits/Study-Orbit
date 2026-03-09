@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 
 const AllTeacherBatch = () => {
   const theme = useSelector((state) => state.toggleTheme.value);
-  const role = useSelector((state) => state.auth?.user?.role); // assuming you store role in auth slice
+  const rawRole = localStorage.getItem('role');
+  const role = rawRole?.trim().toLowerCase(); // ✅ normalize role string
 
   const { data, isLoading, isError, refetch } = useGetBatchForTeacherQuery(undefined, {
     pollingInterval: 30000,
@@ -25,7 +26,7 @@ const AllTeacherBatch = () => {
       try {
         await deleteBatch(batchId).unwrap();
         alert("Batch deleted successfully!");
-        refetch(); // refresh list after deletion
+        refetch();
       } catch (err) {
         alert("Error deleting batch");
       }
