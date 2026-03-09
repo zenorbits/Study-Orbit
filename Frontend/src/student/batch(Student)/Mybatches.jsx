@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useFetchJoinedBatchQuery } from "../../redux/api/batchApi";
+import { Link } from "react-router-dom";
 
 const Mybatches = () => {
   const theme = useSelector((state) => state.toggleTheme.value);
@@ -38,12 +39,39 @@ const Mybatches = () => {
           {joinedBatches.map((batch) => (
             <div
               key={batch._id}
-              className={`rounded-lg shadow-md p-6 
+              className={`rounded-lg shadow-md p-6 flex flex-col justify-between
                 ${theme === "Dark" ? "bg-black/40 border border-emerald-600" : "bg-white/80 border border-sky-300"} 
                 hover:shadow-lg transition`}
             >
-              <h2 className="text-xl font-bold mb-2">{batch.batchname}</h2>
-              <p className="text-sm opacity-80 mb-4">{batch.description}</p>
+              <div>
+                <h2 className="text-xl font-bold mb-2">{batch.batchname}</h2>
+                <p className="text-sm opacity-80 mb-4">{batch.description}</p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 mt-2">
+                <Link
+                  to={`/student/batch/${batch._id}`}
+                  className={`px-3 py-2 text-sm rounded-md font-semibold shadow-md
+                    ${theme === "Dark" 
+                      ? "bg-emerald-600 text-white hover:bg-emerald-700" 
+                      : "bg-sky-500 text-white hover:bg-sky-600"} 
+                    transition-transform hover:scale-105`}
+                >
+                  View More
+                </Link>
+
+                <Link
+                  to={`/student/batch/${batch._id}/assignments`}
+                  className={`px-3 py-2 text-sm rounded-md font-semibold shadow-md
+                    ${theme === "Dark" 
+                      ? "bg-purple-600 text-white hover:bg-purple-700" 
+                      : "bg-purple-500 text-white hover:bg-purple-600"} 
+                    transition-transform hover:scale-105`}
+                >
+                  View Assignments
+                </Link>
+              </div>
             </div>
           ))}
         </main>

@@ -93,15 +93,10 @@ const StudentNavbar = () => {
         <Link to="/student" className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition">
           Home
         </Link>
-        <Link to="/student/courses" className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition">
-          Courses
-        </Link>
         <Link to="/student/batches" className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition">
           My Batch
         </Link>
-        <Link to="/student/assignments" className="px-6 py-3 md:px-0 md:py-0 font-semibold hover:opacity-80 transition">
-          Assignments
-        </Link>
+
 
         {/* Profile */}
         <Link to="/student/profile">
