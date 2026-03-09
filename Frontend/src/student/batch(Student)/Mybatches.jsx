@@ -50,16 +50,7 @@ const Mybatches = () => {
 
               {/* Action Buttons */}
               <div className="flex gap-3 mt-2">
-                <Link
-                  to={`/student/batch/${batch._id}`}
-                  className={`px-3 py-2 text-sm rounded-md font-semibold shadow-md
-                    ${theme === "Dark" 
-                      ? "bg-emerald-600 text-white hover:bg-emerald-700" 
-                      : "bg-sky-500 text-white hover:bg-sky-600"} 
-                    transition-transform hover:scale-105`}
-                >
-                  View More
-                </Link>
+
 
                 <Link
                   to={`/student/batch/${batch._id}/assignments`}
