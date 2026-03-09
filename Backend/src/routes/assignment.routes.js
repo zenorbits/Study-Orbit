@@ -6,6 +6,6 @@ const { createAssignment, getAssignment, deleteAssignment, getAssignmentsByBatch
 router.post('/:id/createAssignment', middleware.authMiddleware, middleware.requiredRole(['admin', 'teacher']), createAssignment);
 router.get('/getassignment', middleware.authMiddleware, getAssignment);
 router.delete('/deleteassignment', middleware.authMiddleware, middleware.requiredRole(['admin', 'teacher']), deleteAssignment);
-router.get('/:id/batchassignment', middleware.authMiddleware, getAssignmentsByBatch);
+router.get('/:batchId/batchassignment', middleware.authMiddleware, getAssignmentsByBatch);
 
 module.exports = router

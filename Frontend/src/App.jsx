@@ -31,7 +31,8 @@ const ManageTeacher = lazy(() => import('./admin/ManageTeacher'));
 const ProfilePage = lazy(() => import('./components/ProfilePage'));
 const ForgotPasswordPage = lazy(() => import('./components/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('./components/ResetPasswordPage'));
-const AnnouncementPage = lazy(() => import('./components/AnnouncementPage'))
+const AnnouncementPage = lazy(() => import('./components/AnnouncementPage'));
+const StudentAssignment = lazy(() => import('./student/StudentAssignment'));
 
 // ✅ Layout wrapper with Lenis smooth scroll
 const Layout = ({ children }) => {
@@ -88,7 +89,7 @@ const App = () => {
             <Route path="announcements" element={<AnnouncementPage role={'teacher'} />} />
             <Route path="assignments" element={<AssignmentPage role={'teacher'} />} />
             <Route path="batch/:id" element={<BatchInfoPage role={'teacher'} />} />
-             <Route path='attendance' element={<AttendancePage />} />
+            <Route path='attendance' element={<AttendancePage />} />
           </Route>
 
           {/* Admin Routes */}
@@ -124,6 +125,7 @@ const App = () => {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="editprofile" element={<EditProfileForm />} />
             <Route path="announcements" element={<AnnouncementPage />} />
+            <Route path="batch/:batchId/assignments" element={<StudentAssignment />} />
           </Route>
 
           {/* 404 Fallback */}
